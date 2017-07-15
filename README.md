@@ -160,5 +160,3 @@ If we don’t want to mock an external API, how can we test the code that drives
 Page 110
 
 We’ll start by writing the test as if all the code it needs exists and will fill in the implementations afterwards.
-
-Before that: get project up and going in IntelliJ
