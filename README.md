@@ -157,6 +157,6 @@ We find that tests that mock external libraries often need to be complex to get 
 If we don’t want to mock an external API, how can we test the code that drives it? We write a layer of adapter objects that uses the third-party API to implement these interfaces.
 
 ## Upto
-Page 98
+Page 108
 
-Part III
+Chapter 10
