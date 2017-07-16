@@ -6,6 +6,8 @@ import com.objogate.wl.swing.driver.JLabelDriver;
 import com.objogate.wl.swing.gesture.GesturePerformer;
 import sun.applet.Main;
 
+import static org.hamcrest.core.IsEqual.equalTo;
+
 /**
  * Created by bob on 16/07/2017.
  */

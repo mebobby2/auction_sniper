@@ -1,7 +1,5 @@
 package endtoend.auctionsniper;
 
-import static org.hamcrest.CoreMatchers.containsString;
-
 
 /**
  * Created by bob on 16/07/2017.

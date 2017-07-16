@@ -7,7 +7,9 @@ import org.jivesoftware.smack.packet.Message;
 import java.util.concurrent.ArrayBlockingQueue;
 
 import static java.util.concurrent.TimeUnit.SECONDS;
+import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.core.IsNull.notNullValue;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
  * Created by bob on 16/07/2017.
