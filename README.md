@@ -174,4 +174,3 @@ Page 134
 
 Double-Entry Values
 
-Before that: start from page 131 - A Test for Bidding to make sure my code is the same as the book's

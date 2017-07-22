@@ -2,6 +2,7 @@ package endtoend.auctionsniper;
 
 import static endtoend.auctionsniper.FakeAuctionServer.XMPP_HOSTNAME;
 import auctionsniper.Main;
+import auctionsniper.ui.MainWindow;
 
 /**
  * Created by bob on 16/07/2017.
@@ -26,14 +27,14 @@ public class ApplicationRunner {
         thread.setDaemon(true);
         thread.start();
         driver = new AuctionSniperDriver(1000);
-        driver.showsSniperStatus("joining");
+        driver.showsSniperStatus(MainWindow.STATUS_JOINING);
     }
 
     public void showsSniperHasLostAuction() {
-        driver.showsSniperStatus("lost");
+        driver.showsSniperStatus(MainWindow.STATUS_LOST);
     }
 
-    public void hasShownSniperIsBidding() { driver.showsSniperStatus("bidding"); }
+    public void hasShownSniperIsBidding() { driver.showsSniperStatus(MainWindow.STATUS_BIDDING); }
 
     public void stop() {
         if (driver != null) {
