@@ -1,6 +1,8 @@
 package endtoend.auctionsniper;
 
 
+import com.objogate.wl.internal.Timeout;
+import org.hamcrest.Matcher;
 import org.jivesoftware.smack.*;
 import org.jivesoftware.smack.packet.Message;
 
@@ -9,6 +11,8 @@ import java.util.concurrent.ArrayBlockingQueue;
 import static auctionsniper.Main.AUCTION_RESOURCE;
 import static auctionsniper.Main.ITEM_ID_AS_LOGIN;
 import static java.util.concurrent.TimeUnit.SECONDS;
+import static org.hamcrest.CoreMatchers.anything;
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.core.IsNull.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -47,7 +51,23 @@ public class FakeAuctionServer {
     }
 
     public  void hasReceivedJoinRequestFromSniper() throws InterruptedException {
-        messageListener.receivesAMessage();
+        messageListener.receivesAMessage(is(anything()));
+    }
+
+    public void reportPrice(int price, int increment, String bidder) throws Exception {
+        currentChat.sendMessage(
+                String.format("SQLVersion: 1.1; Event: PRICE; "
+                                + "CurrentPrice: %d; Increment: %d; Bidder: %s;",
+                                price, increment, bidder));
+    }
+
+    public void hasReceiveBid(int bid, String sniperId) throws InterruptedException {
+        assertThat(currentChat.getParticipant(), equalTo(sniperId));
+        messageListener.receivesAMessage(
+                equalTo(
+                        String.format("SQLVersion 1.1; Command: BID; Price: %d;", bid)
+                )
+        );
     }
 
     public void announceClosed() throws XMPPException {
@@ -65,12 +85,17 @@ public class FakeAuctionServer {
     public class SingleMessageListener implements MessageListener {
         private final ArrayBlockingQueue<Message> messages = new ArrayBlockingQueue<Message>(1);
 
-        public  void  processMessage(Chat chat, Message message) {
+        public void processMessage(Chat chat, Message message) {
             messages.add(message);
         }
 
-        public  void receivesAMessage() throws InterruptedException {
-            assertThat("Message", messages.poll(5, SECONDS), is(notNullValue()));
+//      <? super String> is any class which is a superclass of String (including String itself)
+//      <?> means class of any type
+        @SuppressWarnings("unchecked")
+        public  void receivesAMessage(Matcher<? super String> messageMatcher) throws InterruptedException {
+            final Message message = messages.poll(5, SECONDS);
+            assertThat("Message", message, is(notNullValue()));
+            assertThat(message.getBody(), messageMatcher);
         }
     }
 }
