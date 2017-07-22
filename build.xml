@@ -32,7 +32,9 @@
                srcdir="${app.src.dir}"
                classpathref="app.lib.path"
                includeantruntime="false"
-               debug="on"/>
+               debug="on">
+            <compilerarg value="-Xlint"/>
+        </javac>
     </target>
 
     <target name="test.compile"
@@ -43,7 +45,9 @@
                srcdir="${test.src.dir}"
                classpathref="test.lib.path"
                includeantruntime="false"
-               debug="on"/>
+               debug="on">
+            <compilerarg value="-Xlint"/>
+        </javac>
     </target>
 
     <target name="openfire.check">
@@ -61,7 +65,8 @@
         <junit>
             <batchtest todir="${test.reports.dir}" haltonfailure="true" haltonerror="true">
                 <formatter type="plain"/>
-                <fileset dir="${test.dir}/end-to-end" includes="**/*Test.java" />
+                <formatter type="plain" usefile="false" /> <!-- to screen -->
+                <fileset dir="${test.dir}/endtoend" includes="**/*Test.java" />
             </batchtest>
             <classpath>
                 <path refid="test.lib.path" />
