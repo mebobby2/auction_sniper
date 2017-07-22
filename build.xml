@@ -39,7 +39,7 @@
 
     <target name="test.compile"
             depends="app.compile">
-        <property name="test.src.dir" location="${test.dir}/endtoend" />
+        <property name="test.src.dir" location="${test.dir}" />
         <mkdir dir="${test.classes.dir}" />
         <javac destdir="${test.classes.dir}"
                srcdir="${test.src.dir}"
@@ -63,10 +63,10 @@
         <property name="test.reports.dir" location="${build.dir}/testreports"/>
         <mkdir dir="${test.reports.dir}"/>
         <junit>
-            <batchtest todir="${test.reports.dir}" haltonfailure="true" haltonerror="true">
-                <formatter type="plain"/>
-                <formatter type="plain" usefile="false" /> <!-- to screen -->
-                <fileset dir="${test.dir}/endtoend" includes="**/*Test.java" />
+            <batchtest todir="${test.reports.dir}" haltonfailure="no" haltonerror="no">
+                <formatter type="xml"/>
+                <formatter type="brief" usefile="false" /> <!-- to screen -->
+                <fileset dir="${test.dir}" includes="**/*Test.java" />
             </batchtest>
             <classpath>
                 <path refid="test.lib.path" />
