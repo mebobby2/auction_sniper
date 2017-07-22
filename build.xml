@@ -63,7 +63,7 @@
         <property name="test.reports.dir" location="${build.dir}/testreports"/>
         <mkdir dir="${test.reports.dir}"/>
         <junit>
-            <batchtest todir="${test.reports.dir}" haltonfailure="no" haltonerror="no">
+            <batchtest todir="${test.reports.dir}" haltonfailure="true" haltonerror="true">
                 <formatter type="xml"/>
                 <formatter type="brief" usefile="false" /> <!-- to screen -->
                 <fileset dir="${test.dir}" includes="**/*Test.java" />
