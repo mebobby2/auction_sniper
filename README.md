@@ -2,7 +2,7 @@
 
 ### Setup
 * Java 8 with JUnit 4
-* Openfire (XMPP message broker) is hosted at http://localhost:9090. Login is admin:password
+* Openfire v 4.1.5 (XMPP message broker) is hosted at http://localhost:9090. Login is admin:password
 * Ant (brew install ant)
 
 ### Testing
