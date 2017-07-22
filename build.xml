@@ -16,7 +16,7 @@
     </path>
 
     <path id="test.lib.path">
-        <fileset dir="${lib.dir}/test" includes="*.jar" excludes="*-src.jar"/>
+        <fileset dir="lib/develop" includes="*.jar" excludes="*-src.jar"/>
         <path location="${app.classes.dir}" />
         <path refid="app.lib.path"/>
     </path>
