@@ -10,7 +10,7 @@ import auctionsniper.ui.MainWindow;
 public class ApplicationRunner {
     public static final String SNIPER_ID = "sniper";
     public static final String SNIPER_PASSWORD = "sniper";
-    public static final String SNIPER_XMPP_ID = "sniper";
+    public static final String SNIPER_XMPP_ID = "sniper@192.168.0.151/Auction";
 
     private AuctionSniperDriver driver;
 

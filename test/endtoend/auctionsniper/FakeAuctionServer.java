@@ -1,6 +1,7 @@
 package endtoend.auctionsniper;
 
 
+import auctionsniper.Main;
 import com.objogate.wl.internal.Timeout;
 import org.hamcrest.Matcher;
 import org.jivesoftware.smack.*;
@@ -50,8 +51,8 @@ public class FakeAuctionServer {
         );
     }
 
-    public  void hasReceivedJoinRequestFromSniper() throws InterruptedException {
-        messageListener.receivesAMessage(is(anything()));
+    public  void hasReceivedJoinRequestFromSniper(String sniperId) throws InterruptedException {
+        receivesAMessageMatching(sniperId, equalTo(Main.JOIN_COMMAND_FORMAT ));
     }
 
     public void reportPrice(int price, int increment, String bidder) throws Exception {
@@ -62,12 +63,13 @@ public class FakeAuctionServer {
     }
 
     public void hasReceiveBid(int bid, String sniperId) throws InterruptedException {
+        receivesAMessageMatching(sniperId,
+                                    equalTo(String.format(Main.BID_COMMAND_FORMAT, bid)));
+    }
+
+    private void receivesAMessageMatching(String sniperId, Matcher<? super String> messageMatcher) throws  InterruptedException {
+        messageListener.receivesAMessage(messageMatcher);
         assertThat(currentChat.getParticipant(), equalTo(sniperId));
-        messageListener.receivesAMessage(
-                equalTo(
-                        String.format("SQLVersion 1.1; Command: BID; Price: %d;", bid)
-                )
-        );
     }
 
     public void announceClosed() throws XMPPException {
