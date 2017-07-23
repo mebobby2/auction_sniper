@@ -57,13 +57,13 @@
     </target>
 
     <target name="test.run"
-            description="Run the tests"
+            description="Run the end to end tests"
             depends="test.compile, openfire.check" >
         <fail message="OpenFire is not running" if="openfire.is.down"/>
         <property name="test.reports.dir" location="${build.dir}/testreports"/>
         <mkdir dir="${test.reports.dir}"/>
         <junit>
-            <batchtest todir="${test.reports.dir}" haltonfailure="true" haltonerror="true">
+            <batchtest todir="${test.reports.dir}" haltonfailure="no" haltonerror="no">
                 <formatter type="xml"/>
                 <formatter type="brief" usefile="false" /> <!-- to screen -->
                 <fileset dir="${test.dir}" includes="**/*Test.java" />
