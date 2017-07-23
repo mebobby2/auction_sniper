@@ -9,6 +9,5 @@ import org.jivesoftware.smack.packet.Message;
  */
 public class AuctionMessageTranslator implements MessageListener {
     public void processMessage(Chat chat, Message message) {
-
     }
 }

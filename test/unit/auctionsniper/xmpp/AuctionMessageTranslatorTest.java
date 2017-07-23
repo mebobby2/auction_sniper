@@ -6,11 +6,14 @@ import org.jivesoftware.smack.Chat;
 import org.jivesoftware.smack.packet.Message;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
+import org.jmock.integration.junit4.JMock;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 
 /**
  * Created by bob on 23/07/2017.
  */
+@RunWith(JMock.class)
 public class AuctionMessageTranslatorTest {
     public static final Chat UNUSED_CHAT = null;
     private final AuctionMessageTranslator translator = new AuctionMessageTranslator();
