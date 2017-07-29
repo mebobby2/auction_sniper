@@ -12,7 +12,7 @@ import javax.swing.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
-public class Main implements AuctionEventListener {
+public class Main implements SniperListener {
   @SuppressWarnings("unused") private Chat notToBeGCd;
 
   private MainWindow ui;
@@ -44,7 +44,7 @@ public class Main implements AuctionEventListener {
     disconnectWhenUICloses(connection);
     Chat chat = connection.getChatManager().createChat(
             auctionId(itemId, connection),
-            new AuctionMessageTranslator(this));
+            new AuctionMessageTranslator(new AuctionSniper(this)));
     chat.sendMessage(JOIN_COMMAND_FORMAT);
     notToBeGCd = chat;
   }
@@ -72,11 +72,11 @@ public class Main implements AuctionEventListener {
 
   private void startUserInterface() throws Exception { SwingUtilities.invokeAndWait(() -> ui = new MainWindow()); }
 
-  @Override
-  public void auctionClosed() {
-    SwingUtilities.invokeLater(() -> ui.showStatus(MainWindow.STATUS_LOST));
-  }
+//  @Override
+//  public void currentPrice(int price, int increment) { SwingUtilities.invokeLater(() -> ui.showStatus(MainWindow.STATUS_BIDDING)); }
 
   @Override
-  public void currentPrice(int price, int increment) { SwingUtilities.invokeLater(() -> ui.showStatus(MainWindow.STATUS_BIDDING)); }
+  public void sniperLost() {
+    SwingUtilities.invokeLater(() -> ui.showStatus(MainWindow.STATUS_LOST));
+  }
 }
