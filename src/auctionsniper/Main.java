@@ -45,7 +45,7 @@ public class Main implements SniperListener {
     notToBeGCd = chat;
 
     Auction auction = new XMPPAuction(chat);
-    chat.addMessageListener(new AuctionMessageTranslator(new AuctionSniper(auction, this)));
+    chat.addMessageListener(new AuctionMessageTranslator(new AuctionSniper(auction, new SniperStateDisplayer())));
     auction.join();
   }
 
@@ -107,6 +107,23 @@ public class Main implements SniperListener {
       } catch (XMPPException e) {
         e.printStackTrace();
       }
+    }
+  }
+
+  public class SniperStateDisplayer implements SniperListener {
+
+    @Override
+    public void sniperBidding() {
+      showStatus(MainWindow.STATUS_BIDDING);
+    }
+
+    @Override
+    public void sniperLost() {
+      showStatus(MainWindow.STATUS_LOST);
+    }
+
+    private void showStatus(final String status) {
+      SwingUtilities.invokeLater(() -> ui.showStatus(status));
     }
   }
 }
