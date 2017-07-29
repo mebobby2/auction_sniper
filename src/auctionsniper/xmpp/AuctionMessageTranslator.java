@@ -6,6 +6,7 @@ import org.jivesoftware.smack.MessageListener;
 import org.jivesoftware.smack.packet.Message;
 
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by bob on 23/07/2017.
@@ -18,24 +19,50 @@ public class AuctionMessageTranslator implements MessageListener {
     }
 
     public void processMessage(Chat chat, Message message) {
-        HashMap<String, String> event = unpackEventFrom(message);
+        AuctionEvent event = AuctionEvent.from(message.getBody());
 
-        String type = event.get("Event");
-        if ("CLOSE".equals(type)) {
+        String eventType = event.type();
+        if ("CLOSE".equals(eventType)) {
             listener.auctionClosed();
-        } else if ("PRICE".equals(type)) {
-            listener.currentPrice(Integer.parseInt(event.get("CurrentPrice")),
-                                  Integer.parseInt(event.get("Increment")));
+        } if ("PRICE".equals(eventType)) {
+            listener.currentPrice(event.currentPrice(), event.increment());
         }
-
     }
 
-    private HashMap<String,String> unpackEventFrom(Message message) {
-        HashMap<String, String> event = new HashMap<>();
-        for (String element : message.getBody().split(";")) {
-            String[] pair = element.split(":");
-            event.put(pair[0].trim(), pair[1].trim());
+//    AuctionEvent is a value: it's immutable and there is not interesting differences between two instances
+//    with the same contents.
+
+//    Our rule of thumb is that we try to limit passing around types with generics (the types enclosed in angle
+//    brackets). Particularly when applied to collections, we view it as a form of duplication. It’s a hint that there’s
+//    a domain concept that should be extracted into a type.
+    private static class AuctionEvent {
+        private final Map<String, String> fields = new HashMap<>();
+        public String type() { return get("Event"); }
+        public int currentPrice() { return getInt("CurrentPrice"); }
+        public int increment() { return getInt("Increment"); }
+
+        private int getInt(String fieldName) {
+            return Integer.parseInt(get(fieldName));
         }
-        return event;
+
+        private String get(String fieldName) { return fields.get(fieldName); }
+
+        private void addField(String field) {
+            String[] pair = field.split(":");
+            fields.put(pair[0].trim(), pair[1].trim());
+        }
+
+        static AuctionEvent from(String messageBody) {
+            AuctionEvent event = new AuctionEvent();
+            for (String field : fieldsIn(messageBody)) {
+                event.addField(field);
+            }
+            return event;
+        }
+
+        static String[] fieldsIn(String messageBody) {
+            return messageBody.split(";");
+        }
+
     }
 }
