@@ -3,10 +3,8 @@ package auctionsniper;
 import auctionsniper.ui.MainWindow;
 import auctionsniper.xmpp.AuctionMessageTranslator;
 import org.jivesoftware.smack.Chat;
-import org.jivesoftware.smack.MessageListener;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
-import org.jivesoftware.smack.packet.Message;
 
 import javax.swing.*;
 import java.awt.event.WindowAdapter;
@@ -42,22 +40,13 @@ public class Main implements SniperListener {
 
   private void joinAuction(XMPPConnection connection, String itemId) throws XMPPException {
     disconnectWhenUICloses(connection);
-    Chat chat = connection.getChatManager().createChat(auctionId(itemId, connection), null);
+
+    final Chat chat = connection.getChatManager().createChat(auctionId(itemId, connection), null);
     notToBeGCd = chat;
 
-    Auction auction = new Auction() {
-      @Override
-      public void bid(int amount) {
-        try {
-          chat.sendMessage(String.format(BID_COMMAND_FORMAT, amount));
-        } catch (XMPPException e) {
-          e.printStackTrace();
-        }
-      }
-    };
-
+    Auction auction = new XMPPAuction(chat);
     chat.addMessageListener(new AuctionMessageTranslator(new AuctionSniper(auction, this)));
-    chat.sendMessage(JOIN_COMMAND_FORMAT);
+    auction.join();
   }
 
   private void disconnectWhenUICloses(final XMPPConnection connection) {
@@ -91,5 +80,33 @@ public class Main implements SniperListener {
   @Override
   public void sniperBidding() {
     SwingUtilities.invokeLater(() -> ui.showStatus(MainWindow.STATUS_BIDDING));
+  }
+
+  // There is a static nested class. In java, static classes have to be nested.
+  // Static classes do not need an instance of the enclosing class in order to be instantiated itself
+  public static class XMPPAuction implements Auction {
+    private final Chat chat;
+
+    public XMPPAuction(Chat chat) {
+      this.chat = chat;
+    }
+
+    @Override
+    public void join() {
+      sendMessage(JOIN_COMMAND_FORMAT);
+    }
+
+    @Override
+    public void bid(int amount) {
+      sendMessage(String.format(BID_COMMAND_FORMAT, amount));
+    }
+
+    private void sendMessage(final String message) {
+      try {
+        chat.sendMessage(message);
+      } catch (XMPPException e) {
+        e.printStackTrace();
+      }
+    }
   }
 }
