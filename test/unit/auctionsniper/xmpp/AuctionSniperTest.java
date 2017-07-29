@@ -1,6 +1,7 @@
 package unit.auctionsniper.xmpp;
 
 import auctionsniper.Auction;
+import auctionsniper.AuctionEventListener;
 import auctionsniper.AuctionSniper;
 import auctionsniper.SniperListener;
 import org.jmock.Expectations;
@@ -41,6 +42,14 @@ public class AuctionSniperTest {
             atLeast(1).of(sniperListener).sniperBidding();
         }});
 
-        sniper.currentPrice(price, increment);
+        sniper.currentPrice(price, increment, AuctionEventListener.PriceSource.FromOtherBidder);
+    }
+
+    @Test public void reportIsWinningWhenCurrentPriceComesFromSniper() {
+        context.checking(new Expectations() {{
+            atLeast(1).of(sniperListener).sniperWinning();
+        }});
+
+        sniper.currentPrice(123, 45, AuctionEventListener.PriceSource.FromSniper);
     }
 }

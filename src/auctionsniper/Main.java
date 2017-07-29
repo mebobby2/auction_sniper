@@ -10,7 +10,7 @@ import javax.swing.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
-public class Main implements SniperListener {
+public class Main {
   @SuppressWarnings("unused") private Chat notToBeGCd;
 
   private MainWindow ui;
@@ -45,7 +45,10 @@ public class Main implements SniperListener {
     notToBeGCd = chat;
 
     Auction auction = new XMPPAuction(chat);
-    chat.addMessageListener(new AuctionMessageTranslator(new AuctionSniper(auction, new SniperStateDisplayer())));
+    chat.addMessageListener(
+            new AuctionMessageTranslator(
+                    connection.getUser(),
+                    new AuctionSniper(auction, new SniperStateDisplayer())));
     auction.join();
   }
 
@@ -71,16 +74,6 @@ public class Main implements SniperListener {
   }
 
   private void startUserInterface() throws Exception { SwingUtilities.invokeAndWait(() -> ui = new MainWindow()); }
-
-  @Override
-  public void sniperLost() {
-    SwingUtilities.invokeLater(() -> ui.showStatus(MainWindow.STATUS_LOST));
-  }
-
-  @Override
-  public void sniperBidding() {
-    SwingUtilities.invokeLater(() -> ui.showStatus(MainWindow.STATUS_BIDDING));
-  }
 
   // There is a static nested class. In java, static classes have to be nested.
   // Static classes do not need an instance of the enclosing class in order to be instantiated itself
@@ -115,6 +108,11 @@ public class Main implements SniperListener {
     @Override
     public void sniperBidding() {
       showStatus(MainWindow.STATUS_BIDDING);
+    }
+
+    @Override
+    public void sniperWinning() {
+      showStatus(MainWindow.STATUS_WINNING);
     }
 
     @Override

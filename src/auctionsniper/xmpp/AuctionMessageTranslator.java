@@ -13,9 +13,11 @@ import java.util.Map;
  */
 public class AuctionMessageTranslator implements MessageListener {
     private final AuctionEventListener listener;
+    private final String sniperId;
 
-    public AuctionMessageTranslator(AuctionEventListener listener) {
+    public AuctionMessageTranslator(String sniperId, AuctionEventListener listener) {
         this.listener = listener;
+        this.sniperId = sniperId;
     }
 
     public void processMessage(Chat chat, Message message) {
@@ -25,7 +27,9 @@ public class AuctionMessageTranslator implements MessageListener {
         if ("CLOSE".equals(eventType)) {
             listener.auctionClosed();
         } if ("PRICE".equals(eventType)) {
-            listener.currentPrice(event.currentPrice(), event.increment());
+            listener.currentPrice(event.currentPrice(),
+                    event.increment(),
+                    event.isFrom(sniperId));
         }
     }
 
@@ -40,6 +44,12 @@ public class AuctionMessageTranslator implements MessageListener {
         public String type() { return get("Event"); }
         public int currentPrice() { return getInt("CurrentPrice"); }
         public int increment() { return getInt("Increment"); }
+
+        public AuctionEventListener.PriceSource isFrom(String sniperId) {
+            return sniperId.equals(bidder()) ? AuctionEventListener.PriceSource.FromSniper : AuctionEventListener.PriceSource.FromOtherBidder;
+        }
+
+        private String bidder() { return get("Bidder"); }
 
         private int getInt(String fieldName) {
             return Integer.parseInt(get(fieldName));
