@@ -116,6 +116,11 @@ public class Main {
     }
 
     @Override
+    public void sniperWon() {
+      showStatus(MainWindow.STATUS_WON);
+    }
+
+    @Override
     public void sniperLost() {
       showStatus(MainWindow.STATUS_LOST);
     }
