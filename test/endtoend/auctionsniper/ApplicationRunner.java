@@ -22,7 +22,7 @@ public class ApplicationRunner {
               try {
                   Main.main(XMPP_HOSTNAME, SNIPER_ID, SNIPER_PASSWORD, itemId);
               } catch (Exception e) {
-                  e.printStackTrace();;
+                  e.printStackTrace();
               }
           }
         };
