@@ -48,7 +48,7 @@ public class Main {
     chat.addMessageListener(
             new AuctionMessageTranslator(
                     connection.getUser(),
-                    new AuctionSniper(auction, new SniperStateDisplayer())));
+                    new AuctionSniper(itemId, auction, new SniperStateDisplayer())));
     auction.join();
   }
 
@@ -106,7 +106,7 @@ public class Main {
   public class SniperStateDisplayer implements SniperListener {
 
     @Override
-    public void sniperBidding() {
+    public void sniperBidding(SniperState sniperState) {
       showStatus(MainWindow.STATUS_BIDDING);
     }
 

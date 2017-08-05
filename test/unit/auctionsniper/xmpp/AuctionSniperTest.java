@@ -1,9 +1,6 @@
 package unit.auctionsniper.xmpp;
 
-import auctionsniper.Auction;
-import auctionsniper.AuctionEventListener;
-import auctionsniper.AuctionSniper;
-import auctionsniper.SniperListener;
+import auctionsniper.*;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.jmock.States;
@@ -19,9 +16,10 @@ public class AuctionSniperTest {
     private final Mockery context = new Mockery();
     private final Auction auction = context.mock(Auction.class);
     private final SniperListener sniperListener = context.mock(SniperListener.class);
-    private final AuctionSniper sniper = new AuctionSniper(auction, sniperListener);
+    private final AuctionSniper sniper = new AuctionSniper(ITEM_ID, auction, sniperListener);
+    private static final String ITEM_ID = "item-xxx";
 
-//    This is a “logical” representation of what’s going on inside the object, in this case the Sniper. It allows the
+    //    This is a “logical” representation of what’s going on inside the object, in this case the Sniper. It allows the
 //    test to describe what it finds relevant about the Sniper, regardless of how the Sniper is actually implemented.
 //    This separation will allow us to make radical changes to the implementation of the Sniper
 //    without changing the tests.
@@ -40,11 +38,11 @@ public class AuctionSniperTest {
     public void reportsLostIfAuctionClosesWhenBidding() {
         context.checking(new Expectations() {{
             ignoring(auction);
-            allowing(sniperListener).sniperBidding();
-                then(sniperState.is("bidding"));
+            allowing(sniperListener).sniperBidding(with(any(SniperState.class)));
+            then(sniperState.is("bidding"));
 
             atLeast(1).of(sniperListener).sniperLost();
-                when(sniperState.is("bidding"));
+            when(sniperState.is("bidding"));
         }});
 
         sniper.currentPrice(123, 45, AuctionEventListener.PriceSource.FromOtherBidder);
@@ -56,28 +54,34 @@ public class AuctionSniperTest {
         context.checking(new Expectations() {{
             ignoring(auction);
             allowing(sniperListener).sniperWinning();
-                then(sniperState.is("winning"));
+            then(sniperState.is("winning"));
 
             atLeast(1).of(sniperListener).sniperWon();
-                when(sniperState.is("winning"));
+            when(sniperState.is("winning"));
         }});
 
         sniper.currentPrice(132, 45, AuctionEventListener.PriceSource.FromSniper);
         sniper.auctionClosed();
     }
 
-    @Test public void bidsHigherAndReportBiddingWhenNewPriceArrives() {
+    @Test
+    public void bidsHigherAndReportsBiddingWhenNewPriceArrives() {
         final int price = 1001;
         final int increment = 25;
-        context.checking(new Expectations() {{
-            //There are different opinions about whether test values should just be literals with “obvious” values, or
-            // expressed in terms of the calculation they represent. Writing out the calculation may make the test more
-            // readable but risks reimplementing the target code in the test, and in some cases the calculation will be
-            // too complicated to repro- duce. Here, we decide that the calculation is so trivial that we can just write
-            // it into the test.
-            one(auction).bid(price + increment);
-            atLeast(1).of(sniperListener).sniperBidding();
-        }});
+        final int bid = price + increment;
+
+        context.checking(new Expectations() {
+            {
+                //There are different opinions about whether test values should just be literals with “obvious” values, or
+                // expressed in terms of the calculation they represent. Writing out the calculation may make the test more
+                // readable but risks reimplementing the target code in the test, and in some cases the calculation will be
+                // too complicated to reproduce. Here, we decide that the calculation is so trivial that we can just write
+                // it into the test. This is referring to the `bid` variable.
+                one(auction).bid(bid);
+                atLeast(1).of(sniperListener).sniperBidding(
+                        new SniperState(ITEM_ID, price, bid));
+            }
+        });
 
         sniper.currentPrice(price, increment, AuctionEventListener.PriceSource.FromOtherBidder);
     }
