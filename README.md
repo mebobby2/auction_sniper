@@ -169,6 +169,13 @@ We find that tests that mock external libraries often need to be complex to get 
 ##### Write an Adapter Layer
 If we don’t want to mock an external API, how can we test the code that drives it? We write a layer of adapter objects that uses the third-party API to implement these interfaces.
 
+### General workflow
+1. Write an acceptance test
+2. To make this one acceptance test pass, you may need to touch multiple classes 
+3. Write/amend the unit tests first before touching the classes
+4. If code is smelly, use OO design techniques to refactor it (Change tests before refactoring)
+5. Continue until the acceptance test passes
+
 ## Upto
 Page 183
 
