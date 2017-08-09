@@ -176,6 +176,8 @@ If we don’t want to mock an external API, how can we test the code that drives
 4. If code is smelly, use OO design techniques to refactor it (Change tests before refactoring)
 5. Continue until the acceptance test passes
 
+So, even though we allow the tests to drive the architecture, you need to use code smells to write clean code so the architecture can emerge. Same thing in agile software development when designing high level architecture. You need to use smells (decoupling, encapsulation) to drive the high level architecture. 
+
 ## Upto
 Page 183
 
