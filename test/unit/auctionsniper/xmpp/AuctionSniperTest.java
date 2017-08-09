@@ -1,12 +1,18 @@
 package unit.auctionsniper.xmpp;
 
 import auctionsniper.*;
+import org.hamcrest.FeatureMatcher;
+import org.hamcrest.Matcher;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.jmock.States;
 import org.jmock.integration.junit4.JMock;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
+
+import static auctionsniper.SniperState.BIDDING;
+import static org.hamcrest.core.IsEqual.equalTo;
 
 /**
  * Created by bob on 29/07/2017.
@@ -38,8 +44,9 @@ public class AuctionSniperTest {
     public void reportsLostIfAuctionClosesWhenBidding() {
         context.checking(new Expectations() {{
             ignoring(auction);
-            allowing(sniperListener).sniperBidding(with(any(SniperState.class)));
-            then(sniperState.is("bidding"));
+            allowing(sniperListener).sniperStateChanged(
+                    with(aSniperThatIs(BIDDING)));
+                        then(sniperState.is("bidding"));
 
             atLeast(1).of(sniperListener).sniperLost();
             when(sniperState.is("bidding"));
@@ -78,8 +85,8 @@ public class AuctionSniperTest {
                 // too complicated to reproduce. Here, we decide that the calculation is so trivial that we can just write
                 // it into the test. This is referring to the `bid` variable.
                 one(auction).bid(bid);
-                atLeast(1).of(sniperListener).sniperBidding(
-                        new SniperState(ITEM_ID, price, bid));
+                atLeast(1).of(sniperListener).sniperStateChanged(
+                        with(aSniperThatIs(BIDDING)));
             }
         });
 
@@ -93,5 +100,15 @@ public class AuctionSniperTest {
         }});
 
         sniper.currentPrice(123, 45, AuctionEventListener.PriceSource.FromSniper);
+    }
+    private Matcher<SniperSnapshot> aSniperThatIs(final SniperState state) {
+        return new FeatureMatcher<SniperSnapshot, SniperState>(
+                equalTo(state), "sniper that is ", "was")
+        {
+            @Override
+            protected SniperState featureValueOf(SniperSnapshot actual) {
+                return actual.state;
+            }
+        };
     }
 }

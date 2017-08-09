@@ -1,5 +1,6 @@
 package auctionsniper.ui;
 
+import auctionsniper.SniperSnapshot;
 import auctionsniper.SniperState;
 
 import javax.swing.*;
@@ -50,7 +51,7 @@ public class MainWindow extends JFrame {
         snipers.setStatusText(status);
     }
 
-    public void sniperStatusChanged(SniperState sniperState, String statusText) {
-        snipers.sniperStatusChanged(sniperState, statusText);
+    public void sniperStatusChanged(SniperSnapshot sniperState) {
+        snipers.sniperStateChanged(sniperState);
     }
 }

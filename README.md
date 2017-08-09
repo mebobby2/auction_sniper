@@ -178,9 +178,13 @@ If we don’t want to mock an external API, how can we test the code that drives
 
 So, even though we allow the tests to drive the architecture, you need to use code smells to write clean code so the architecture can emerge. Same thing in agile software development when designing high level architecture. You need to use smells (decoupling, encapsulation) to drive the high level architecture. 
 
-## Upto
-Page 183
+### 20/20 Hindsight
+Surely, if we’d spent more time on the design, we wouldn’t have to change it now? Sometimes that’s true. Our experience, however, is that nothing shakes out a design like trying to implement it, and between us we know just a handful of people who are smart enough to get their designs always right. Our coping mechanism is to get into the critical areas of the code early and to allow ourselves to change our collective mind when we could do better. We rely on our skills, on taking small steps, and on the tests to protect us when we make changes.
 
-If we run our acceptance test again, we find we’ve made some progress. It’s
+## Upto
+Page 187
+
+Filling In the Numbers
+
 
 
