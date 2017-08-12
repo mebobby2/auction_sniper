@@ -32,6 +32,8 @@ public class ApplicationRunner {
         thread.start();
 
         driver = new AuctionSniperDriver(1000);
+        driver.hasTitle(MainWindow.APPLICATION_TITLE);
+        driver.hasColumnTitles();
         // Hack
 //        driver.showsSniperStatus(itemId, 0, 0, MainWindow.STATUS_JOINING);
     }

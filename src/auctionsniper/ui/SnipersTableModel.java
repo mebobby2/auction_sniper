@@ -22,6 +22,10 @@ public class SnipersTableModel extends AbstractTableModel implements SniperListe
         return auctionsniper.ui.Column.values().length;
     }
 
+    @Override public String getColumnName(int column) {
+        return Column.at(column).name;
+    }
+
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
         if (snapShot == null) return ""; // Hack
