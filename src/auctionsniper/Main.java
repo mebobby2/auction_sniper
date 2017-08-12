@@ -1,6 +1,7 @@
 package auctionsniper;
 
 import auctionsniper.ui.MainWindow;
+import auctionsniper.ui.SnipersTableModel;
 import auctionsniper.xmpp.AuctionMessageTranslator;
 import org.jivesoftware.smack.Chat;
 import org.jivesoftware.smack.XMPPConnection;
@@ -27,6 +28,8 @@ public class Main {
   public static final String BID_COMMAND_FORMAT = "SQLVersion 1.1; Command: BID; Price: %d;";
   public static final String JOIN_COMMAND_FORMAT = "";
 
+  private final SnipersTableModel snipers = new SnipersTableModel();
+
   public Main() throws Exception {
     startUserInterface();
   }
@@ -48,7 +51,7 @@ public class Main {
     chat.addMessageListener(
             new AuctionMessageTranslator(
                     connection.getUser(),
-                    new AuctionSniper(itemId, auction, new SniperStateDisplayer())));
+                    new AuctionSniper(itemId, auction, new SwingThreadSniperListener(snipers))));
     auction.join();
   }
 
@@ -73,7 +76,7 @@ public class Main {
     return String.format(AUCTION_ID_FORMAT, itemId, connection.getServiceName());
   }
 
-  private void startUserInterface() throws Exception { SwingUtilities.invokeAndWait(() -> ui = new MainWindow()); }
+  private void startUserInterface() throws Exception { SwingUtilities.invokeAndWait(() -> ui = new MainWindow(snipers)); }
 
   // There is a static nested class. In java, static classes have to be nested.
   // Static classes do not need an instance of the enclosing class in order to be instantiated itself
@@ -103,11 +106,17 @@ public class Main {
     }
   }
 
-  public class SniperStateDisplayer implements SniperListener {
+  public class SwingThreadSniperListener implements SniperListener {
+
+    private final SniperListener listener;
+
+    public SwingThreadSniperListener(SniperListener listener) {
+      this.listener = listener;
+    }
 
     @Override
     public void sniperStateChanged(SniperSnapshot snapshot) {
-      SwingUtilities.invokeLater(() -> ui.sniperStatusChanged(snapshot));
+      SwingUtilities.invokeLater(() -> listener.sniperStateChanged(snapshot));
     }
 
   }
