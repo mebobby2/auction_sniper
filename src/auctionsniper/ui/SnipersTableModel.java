@@ -2,19 +2,15 @@ package auctionsniper.ui;
 
 import auctionsniper.SniperListener;
 import auctionsniper.SniperSnapshot;
+import auctionsniper.SniperState;
 
 import javax.swing.table.AbstractTableModel;
 
 public class SnipersTableModel extends AbstractTableModel implements SniperListener {
-    private static String[] STATUS_TEXT = {
-            MainWindow.STATUS_JOINING,
-            MainWindow.STATUS_BIDDING,
-            MainWindow.STATUS_WINNING,
-            MainWindow.STATUS_LOST,
-            MainWindow.STATUS_WON
+    private final static String[] STATUS_TEXT = {
+            "Joining", "Bidding", "Winning", "Lost", "Won"
     };
     private SniperSnapshot snapShot;
-    private String state;
 
     @Override
     public int getRowCount() {
@@ -37,7 +33,7 @@ public class SnipersTableModel extends AbstractTableModel implements SniperListe
             case LAST_BID:
                 return snapShot.lastBid;
             case SNIPER_STATE:
-                return state;
+                return textFor(snapShot.state);
             default:
                 throw new IllegalArgumentException("No column at " + columnIndex);
 
@@ -47,9 +43,11 @@ public class SnipersTableModel extends AbstractTableModel implements SniperListe
     @Override
     public void sniperStateChanged(SniperSnapshot newSnapshot) {
         this.snapShot = newSnapshot;
-        this.state = STATUS_TEXT[newSnapshot.state.ordinal()];
-
         fireTableRowsUpdated(0, 0);
+    }
+
+    public static String textFor(SniperState state) {
+        return STATUS_TEXT[state.ordinal()];
     }
 
     public enum Column {
