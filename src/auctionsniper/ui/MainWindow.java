@@ -52,6 +52,7 @@ public class MainWindow extends JFrame {
     }
 
     public void sniperStatusChanged(SniperSnapshot sniperState) {
+        System.out.println("sddfdssfsadasdasdsad from MainWindow");
         snipers.sniperStateChanged(sniperState);
     }
 }

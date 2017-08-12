@@ -9,7 +9,7 @@ import javax.swing.table.AbstractTableModel;
 import static auctionsniper.ui.MainWindow.STATUS_JOINING;
 
 public class SnipersTableModel extends AbstractTableModel implements SniperListener {
-    private static String[] STATUS_TEXT = { MainWindow.STATUS_JOINING, MainWindow.STATUS_BIDDING };
+    private static String[] STATUS_TEXT = {MainWindow.STATUS_JOINING, MainWindow.STATUS_BIDDING, MainWindow.STATUS_WINNING};
     private SniperSnapshot snapShot;
     private String state;
 
@@ -25,8 +25,11 @@ public class SnipersTableModel extends AbstractTableModel implements SniperListe
 
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
+        System.out.println("columnIndex is " + columnIndex);
+        System.out.println("name is " + Column.at(columnIndex));
         switch (Column.at(columnIndex)) {
             case ITEM_IDENTIFIER:
+                System.out.println("itemId is " + snapShot);
                 return snapShot.itemId;
             case LAST_PRICE:
                 return snapShot.lastPrice;
@@ -57,17 +60,13 @@ public class SnipersTableModel extends AbstractTableModel implements SniperListe
     }
 
     @Override
-    public void sniperWinning() {
-
-    }
-
-    @Override
     public void sniperWon() {
 
     }
 
     @Override
     public void sniperStateChanged(SniperSnapshot newSnapshot) {
+        System.out.println("sniperStateChangedsniperStateChangedsniperStateChangedsniperStateChanged");
         this.snapShot = newSnapshot;
         this.state = STATUS_TEXT[newSnapshot.state.ordinal()];
 

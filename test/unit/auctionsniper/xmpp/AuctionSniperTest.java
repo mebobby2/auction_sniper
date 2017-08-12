@@ -12,6 +12,7 @@ import org.junit.runner.RunWith;
 
 
 import static auctionsniper.SniperState.BIDDING;
+import static auctionsniper.SniperState.WINNING;
 import static org.hamcrest.core.IsEqual.equalTo;
 
 /**
@@ -60,7 +61,6 @@ public class AuctionSniperTest {
     public void reportsWonIfAuctionClosesWhenWinning() {
         context.checking(new Expectations() {{
             ignoring(auction);
-            allowing(sniperListener).sniperWinning();
             then(sniperState.is("winning"));
 
             atLeast(1).of(sniperListener).sniperWon();
@@ -96,10 +96,18 @@ public class AuctionSniperTest {
     @Test
     public void reportIsWinningWhenCurrentPriceComesFromSniper() {
         context.checking(new Expectations() {{
-            atLeast(1).of(sniperListener).sniperWinning();
+            ignoring(auction);
+            allowing(sniperListener).sniperStateChanged(
+                    with(aSniperThatIs(BIDDING)));
+            then(sniperState.is("bidding"));
+
+            atLeast(1).of(sniperListener).sniperStateChanged(
+                    new SniperSnapshot(ITEM_ID, 135, 135, WINNING));
+            when(sniperState.is("bidding"));
         }});
 
-        sniper.currentPrice(123, 45, AuctionEventListener.PriceSource.FromSniper);
+        sniper.currentPrice(123, 12, AuctionEventListener.PriceSource.FromOtherBidder);
+        sniper.currentPrice(135, 45, AuctionEventListener.PriceSource.FromSniper);
     }
     private Matcher<SniperSnapshot> aSniperThatIs(final SniperState state) {
         return new FeatureMatcher<SniperSnapshot, SniperState>(
