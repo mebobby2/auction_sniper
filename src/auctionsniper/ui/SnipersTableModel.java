@@ -48,25 +48,8 @@ public class SnipersTableModel extends AbstractTableModel implements SniperListe
         fireTableRowsUpdated(0, 0);
     }
 
-//    public void sniperStatusChanged(SniperState newSniperState, String newStatusText) {
-//        sniperState = newSniperState;
-//        statusText = newStatusText;
-//        fireTableRowsUpdated(0, 0);
-//    }
-
-    @Override
-    public void sniperLost() {
-
-    }
-
-    @Override
-    public void sniperWon() {
-
-    }
-
     @Override
     public void sniperStateChanged(SniperSnapshot newSnapshot) {
-        System.out.println("sniperStateChangedsniperStateChangedsniperStateChangedsniperStateChanged");
         this.snapShot = newSnapshot;
         this.state = STATUS_TEXT[newSnapshot.state.ordinal()];
 
