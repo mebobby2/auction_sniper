@@ -28,8 +28,10 @@ public class ApplicationRunner {
         };
         thread.setDaemon(true);
         thread.start();
+
         driver = new AuctionSniperDriver(1000);
-        driver.showsSniperStatus(itemId, 0, 0, MainWindow.STATUS_JOINING);
+        // Hack
+//        driver.showsSniperStatus(itemId, 0, 0, MainWindow.STATUS_JOINING);
     }
 
     public void showsSniperHasLostAuction(int lastPrice, int lastBid) {

@@ -181,12 +181,14 @@ So, even though we allow the tests to drive the architecture, you need to use co
 ### 20/20 Hindsight
 Surely, if we’d spent more time on the design, we wouldn’t have to change it now? Sometimes that’s true. Our experience, however, is that nothing shakes out a design like trying to implement it, and between us we know just a handful of people who are smart enough to get their designs always right. Our coping mechanism is to get into the critical areas of the code early and to allow ourselves to change our collective mind when we could do better. We rely on our skills, on taking small steps, and on the tests to protect us when we make changes.
 
+### Defect
+In most systems we build, we end up writing a runtime exception called something like Defect (or perhaps StupidProgrammerMistakeException). We throw this when the code reaches a condition that could only be caused by a programming error, rather than a failure in the runtime environment.
+
 ## Upto
 Page 191
 
 Trimming the Table Model
 
-Before that: add unit tests for SniperState
 
 
 

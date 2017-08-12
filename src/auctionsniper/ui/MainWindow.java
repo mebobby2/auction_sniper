@@ -1,11 +1,8 @@
 package auctionsniper.ui;
 
 import auctionsniper.SniperSnapshot;
-import auctionsniper.SniperState;
 
 import javax.swing.*;
-import javax.swing.border.LineBorder;
-
 import java.awt.*;
 
 
@@ -47,12 +44,7 @@ public class MainWindow extends JFrame {
         return snipersTable;
     }
 
-    public void showStatus(String status) {
-        snipers.setStatusText(status);
-    }
-
     public void sniperStatusChanged(SniperSnapshot sniperState) {
-        System.out.println("sddfdssfsadasdasdsad from MainWindow");
         snipers.sniperStateChanged(sniperState);
     }
 }
