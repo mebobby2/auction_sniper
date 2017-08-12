@@ -182,9 +182,11 @@ So, even though we allow the tests to drive the architecture, you need to use co
 Surely, if we’d spent more time on the design, we wouldn’t have to change it now? Sometimes that’s true. Our experience, however, is that nothing shakes out a design like trying to implement it, and between us we know just a handful of people who are smart enough to get their designs always right. Our coping mechanism is to get into the critical areas of the code early and to allow ourselves to change our collective mind when we could do better. We rely on our skills, on taking small steps, and on the tests to protect us when we make changes.
 
 ## Upto
-Page 187
+Page 191
 
-Filling In the Numbers
+Trimming the Table Model
+
+Before that: add unit tests for SniperState
 
 
 
