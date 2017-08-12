@@ -1,4 +1,4 @@
-package unit.auctionsniper.xmpp;
+package unit.auctionsniper;
 
 import auctionsniper.*;
 import org.hamcrest.FeatureMatcher;
