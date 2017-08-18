@@ -3,18 +3,20 @@ package auctionsniper.ui;
 import auctionsniper.SniperListener;
 import auctionsniper.SniperSnapshot;
 import auctionsniper.SniperState;
+import auctionsniper.util.Defect;
 
 import javax.swing.table.AbstractTableModel;
+import java.util.ArrayList;
 
 public class SnipersTableModel extends AbstractTableModel implements SniperListener {
     private final static String[] STATUS_TEXT = {
             "Joining", "Bidding", "Winning", "Lost", "Won"
     };
-    private SniperSnapshot snapShot;
+    private ArrayList<SniperSnapshot> snapshots = new ArrayList<>();
 
     @Override
     public int getRowCount() {
-        return 1;
+        return snapshots.size();
     }
 
     @Override
@@ -28,18 +30,33 @@ public class SnipersTableModel extends AbstractTableModel implements SniperListe
 
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
-        if (snapShot == null) return ""; // Hack
-        return auctionsniper.ui.Column.at(columnIndex).valueIn(snapShot);
+        if (snapshots.get(rowIndex) == null) return ""; // Hack
+        return Column.at(columnIndex).valueIn(snapshots.get(rowIndex));
     }
 
     @Override
     public void sniperStateChanged(SniperSnapshot newSnapshot) {
-        this.snapShot = newSnapshot;
-        fireTableRowsUpdated(0, 0);
+        int row = rowMatching(newSnapshot);
+        snapshots.set(row, newSnapshot);
+        fireTableRowsUpdated(row, row);
+    }
+
+    private int rowMatching(SniperSnapshot snapshot) {
+        for (int i = 0; i < snapshots.size(); i++) {
+            if (snapshot.isForSameItemAs(snapshots.get(i))) {
+                return i;
+            }
+        }
+        throw new Defect("Cannot find match for " + snapshot);
     }
 
     public static String textFor(SniperState state) {
         return STATUS_TEXT[state.ordinal()];
     }
 
+    public void addSniper(SniperSnapshot snapshot) {
+        snapshots.add(snapshot);
+        int row = snapshots.size() - 1;
+        fireTableRowsInserted(row, row);
+    }
 }
