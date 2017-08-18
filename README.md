@@ -185,9 +185,11 @@ Surely, if we’d spent more time on the design, we wouldn’t have to change it
 In most systems we build, we end up writing a runtime exception called something like Defect (or perhaps StupidProgrammerMistakeException). We throw this when the code reaches a condition that could only be caused by a programming error, rather than a failure in the runtime environment.
 
 ## Upto
-Page 205
+Page 214
 
-Extending the Table Model
+Observations
+
+Before that: get end to end tests to pass
 
 
 

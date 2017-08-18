@@ -21,10 +21,11 @@ public class SnipersTableModel extends AbstractTableModel implements SniperListe
 
     @Override
     public int getColumnCount() {
-        return auctionsniper.ui.Column.values().length;
+        return Column.values().length;
     }
 
-    @Override public String getColumnName(int column) {
+    @Override
+    public String getColumnName(int column) {
         return Column.at(column).name;
     }
 
