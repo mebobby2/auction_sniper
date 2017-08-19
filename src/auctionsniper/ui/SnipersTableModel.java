@@ -31,7 +31,6 @@ public class SnipersTableModel extends AbstractTableModel implements SniperListe
 
     @Override
     public Object getValueAt(int rowIndex, int columnIndex) {
-        if (snapshots.get(rowIndex) == null) return ""; // Hack
         return Column.at(columnIndex).valueIn(snapshots.get(rowIndex));
     }
 

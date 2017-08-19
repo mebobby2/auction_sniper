@@ -189,7 +189,6 @@ Page 214
 
 Observations
 
-Before that: get end to end tests to pass
 
 
 

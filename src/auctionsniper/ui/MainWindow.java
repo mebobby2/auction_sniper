@@ -25,12 +25,12 @@ public class MainWindow extends JFrame {
 
     public MainWindow(SnipersTableModel snipers) {
         super("Auction Sniper");
+        this.snipers = snipers;
         setName(MAIN_WINDOW_NAME);
         fillContentPane(makeSnipersTable(), makeControls());
         pack();
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setVisible(true);
-        this.snipers = snipers;
     }
 
     private JPanel makeControls() {
