@@ -2,22 +2,18 @@ package endtoend.auctionsniper;
 
 
 import auctionsniper.Main;
-import com.objogate.wl.internal.Timeout;
 import org.hamcrest.Matcher;
 import org.jivesoftware.smack.*;
 import org.jivesoftware.smack.packet.Message;
 
 import java.util.concurrent.ArrayBlockingQueue;
 
-import static auctionsniper.Main.AUCTION_RESOURCE;
-import static auctionsniper.Main.ITEM_ID_AS_LOGIN;
+import static auctionsniper.xmpp.XMPPAuctionHouse.AUCTION_RESOURCE;
+import static auctionsniper.xmpp.XMPPAuctionHouse.ITEM_ID_AS_LOGIN;
 import static java.util.concurrent.TimeUnit.SECONDS;
-import static org.hamcrest.CoreMatchers.anything;
 import static org.hamcrest.CoreMatchers.equalTo;
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.Matchers.hasProperty;
-import static org.hamcrest.core.IsNull.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.hasProperty;
 
 /**
  * Created by bob on 16/07/2017.
