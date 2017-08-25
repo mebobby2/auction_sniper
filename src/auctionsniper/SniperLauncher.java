@@ -1,42 +1,20 @@
 package auctionsniper;
 
-import auctionsniper.ui.SnipersTableModel;
-
-import javax.swing.*;
-import java.util.ArrayList;
-
 public class SniperLauncher implements UserRequestListener {
-    private final ArrayList<Auction> notToBeGCd = new ArrayList<>();
     private final AuctionHouse auctionHouse;
-    private final SnipersTableModel snipers;
+    private final SniperCollector collector;
 
-    public SniperLauncher(AuctionHouse auctionHouse, SnipersTableModel snipers) {
+    public SniperLauncher(AuctionHouse auctionHouse, SniperCollector collector) {
         this.auctionHouse = auctionHouse;
-        this.snipers = snipers;
+        this.collector = collector;
     }
     @Override
     public void joinAuction(String itemId) {
-        snipers.addSniper(SniperSnapshot.joining(itemId));
         Item item = new Item(itemId, 0);
         Auction auction = auctionHouse.auctionFor(item);
-        notToBeGCd.add(auction);
-        AuctionSniper sniper = new AuctionSniper(itemId, auction, new SwingThreadSniperListener(snipers));
+        AuctionSniper sniper = new AuctionSniper(itemId, auction);
         auction.addAuctionEventListener(sniper);
+        collector.addSniper(sniper);
         auction.join();
-    }
-
-    public class SwingThreadSniperListener implements SniperListener {
-
-        private final SniperListener listener;
-
-        public SwingThreadSniperListener(SniperListener listener) {
-            this.listener = listener;
-        }
-
-        @Override
-        public void sniperStateChanged(SniperSnapshot snapshot) {
-            SwingUtilities.invokeLater(() -> listener.sniperStateChanged(snapshot));
-        }
-
     }
 }

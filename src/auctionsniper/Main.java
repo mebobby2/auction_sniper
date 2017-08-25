@@ -27,7 +27,7 @@ public class Main {
     public static final String BID_COMMAND_FORMAT = "SQLVersion 1.1; Command: BID; Price: %d;";
     public static final String JOIN_COMMAND_FORMAT = "";
 
-    private final SnipersTableModel snipers = new SnipersTableModel();
+    private final SniperPortfolio portfolio = new SniperPortfolio();
 
     public Main() throws Exception {
         startUserInterface();
@@ -42,7 +42,7 @@ public class Main {
     }
 
     private void addUserRequestListenerFor(final AuctionHouse auctionHouse) {
-        ui.addUserRequestListener(new SniperLauncher(auctionHouse, snipers));
+        ui.addUserRequestListener(new SniperLauncher(auctionHouse, portfolio));
     }
 
     private void disconnectWhenUICloses(final XMPPAuctionHouse auctionHouse) {
@@ -63,7 +63,7 @@ public class Main {
     }
 
     private void startUserInterface() throws Exception {
-        SwingUtilities.invokeAndWait(() -> ui = new MainWindow(snipers));
+        SwingUtilities.invokeAndWait(() -> ui = new MainWindow(portfolio));
     }
 
 }

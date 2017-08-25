@@ -1,13 +1,11 @@
 package auctionsniper.ui;
 
-import auctionsniper.SniperSnapshot;
+import auctionsniper.SniperPortfolio;
 import auctionsniper.UserRequestListener;
 import auctionsniper.util.Announcer;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 
 /**
@@ -20,14 +18,14 @@ public class MainWindow extends JFrame {
     public static final String NEW_ITEM_ID_NAME = "New Item Id Textfield";
     public static final String JOIN_BUTTON_NAME = "Join Button";
 
-    private final SnipersTableModel snipers;
+    private SniperPortfolio portfolio;
     private final Announcer<UserRequestListener> userRequests = Announcer.to(UserRequestListener.class);
 
-    public MainWindow(SnipersTableModel snipers) {
+    public MainWindow(SniperPortfolio portfolio) {
         super("Auction Sniper");
-        this.snipers = snipers;
+        this.portfolio = portfolio;
         setName(MAIN_WINDOW_NAME);
-        fillContentPane(makeSnipersTable(), makeControls());
+        fillContentPane(makeSnipersTable(portfolio), makeControls());
         pack();
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setVisible(true);
@@ -61,8 +59,10 @@ public class MainWindow extends JFrame {
         contentPane.add(new JScrollPane(snipersTable), BorderLayout.CENTER);
     }
 
-    private JTable makeSnipersTable() {
-        final JTable snipersTable = new JTable(snipers);
+    private JTable makeSnipersTable(SniperPortfolio portfolio) {
+        SnipersTableModel model = new SnipersTableModel();
+        portfolio.addPortfolioListener(model);
+        final JTable snipersTable = new JTable(model);
         snipersTable.setName(SNIPERS_TABLE_NAME);
         return snipersTable;
     }

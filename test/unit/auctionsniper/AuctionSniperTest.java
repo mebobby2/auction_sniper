@@ -7,6 +7,7 @@ import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.jmock.States;
 import org.jmock.integration.junit4.JMock;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -22,7 +23,7 @@ public class AuctionSniperTest {
     private final Mockery context = new Mockery();
     private final Auction auction = context.mock(Auction.class);
     private final SniperListener sniperListener = context.mock(SniperListener.class);
-    private final AuctionSniper sniper = new AuctionSniper(ITEM_ID, auction, sniperListener);
+    private final AuctionSniper sniper = new AuctionSniper(ITEM_ID, auction);
     private static final String ITEM_ID = "item-xxx";
 
     //    This is a “logical” representation of what’s going on inside the object, in this case the Sniper. It allows the
@@ -30,6 +31,11 @@ public class AuctionSniperTest {
 //    This separation will allow us to make radical changes to the implementation of the Sniper
 //    without changing the tests.
     private final States sniperState = context.states("sniper");
+
+    @Before
+    public void attachListener() {
+        sniper.addSniperListener(sniperListener);
+    }
 
     @Test
     public void reportsLostWhenAuctionClosesImmediately() {
