@@ -197,6 +197,6 @@ Page 252
 
 Part IV
 
-
+Before that: make sure code is inline with github code
 
 
