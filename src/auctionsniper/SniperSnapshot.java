@@ -55,4 +55,8 @@ public class SniperSnapshot {
     public boolean isForSameItemAs(SniperSnapshot snapshot) {
         return itemId.equals(snapshot.itemId);
     }
+
+    public SniperSnapshot failed() {
+        return new SniperSnapshot(itemId, 0,0, SniperState.FAILED);
+    }
 }

@@ -188,9 +188,9 @@ In most systems we build, we end up writing a runtime exception called something
 As the code scales up, the only way we can continue to understand and maintain it is by structuring the functionality into objects, objects into packages, packages into programs, and programs into systems. We use two principal heuristics to guide this structuring: Separation of concerns and Higher levels of abstraction. Applied consistently, these two forces will push the structure of an appli- cation towards something like Cockburn’s “ports and adapters” architecture [Cockburn08], in which the code for the business domain is isolated from its dependencies on technical infrastructure, such as databases and user interfaces. We don’t want technical concepts to leak into the application model, so we write interfaces to describe its relationships with the outside world in its terminology (Cockburn’s ports). Then we write bridges between the application core and each technical domain (Cockburn’s adapters). This is related to what Eric Evans calls an “anticorruption layer”.
 
 ## Upto
-Page 240
+Page 246
 
-Chapter 19
+Recording the Failure
 
 
 

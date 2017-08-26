@@ -21,12 +21,21 @@ public class AuctionMessageTranslator implements MessageListener {
     }
 
     public void processMessage(Chat chat, Message message) {
-        AuctionEvent event = AuctionEvent.from(message.getBody());
+        try {
+            translate(message.getBody());
+        } catch (Exception parseException) {
+            listener.auctionFailed();
+        }
+    }
+
+    private void translate(String message) throws Exception {
+        AuctionEvent event = AuctionEvent.from(message);
 
         String eventType = event.type();
         if ("CLOSE".equals(eventType)) {
             listener.auctionClosed();
-        } if ("PRICE".equals(eventType)) {
+        }
+        if ("PRICE".equals(eventType)) {
             listener.currentPrice(event.currentPrice(),
                     event.increment(),
                     event.isFrom(sniperId));
@@ -36,26 +45,43 @@ public class AuctionMessageTranslator implements MessageListener {
 //    AuctionEvent is a value: it's immutable and there is not interesting differences between two instances
 //    with the same contents.
 
-//    Our rule of thumb is that we try to limit passing around types with generics (the types enclosed in angle
+    //    Our rule of thumb is that we try to limit passing around types with generics (the types enclosed in angle
 //    brackets). Particularly when applied to collections, we view it as a form of duplication. It’s a hint that there’s
 //    a domain concept that should be extracted into a type.
     private static class AuctionEvent {
         private final Map<String, String> fields = new HashMap<>();
-        public String type() { return get("Event"); }
-        public int currentPrice() { return getInt("CurrentPrice"); }
-        public int increment() { return getInt("Increment"); }
 
-        public AuctionEventListener.PriceSource isFrom(String sniperId) {
+        public String type() throws MissingValueException {
+            return get("Event");
+        }
+
+        public int currentPrice() throws MissingValueException {
+            return getInt("CurrentPrice");
+        }
+
+        public int increment() throws MissingValueException {
+            return getInt("Increment");
+        }
+
+        public AuctionEventListener.PriceSource isFrom(String sniperId) throws MissingValueException {
             return sniperId.equals(bidder()) ? AuctionEventListener.PriceSource.FromSniper : AuctionEventListener.PriceSource.FromOtherBidder;
         }
 
-        private String bidder() { return get("Bidder"); }
+        private String bidder() throws MissingValueException {
+            return get("Bidder");
+        }
 
-        private int getInt(String fieldName) {
+        private int getInt(String fieldName) throws MissingValueException {
             return Integer.parseInt(get(fieldName));
         }
 
-        private String get(String fieldName) { return fields.get(fieldName); }
+        private String get(String fieldName) throws MissingValueException {
+            String value = fields.get(fieldName);
+            if (null == value) {
+                throw new MissingValueException(fieldName);
+            }
+            return value;
+        }
 
         private void addField(String field) {
             String[] pair = field.split(":");
@@ -74,5 +100,11 @@ public class AuctionMessageTranslator implements MessageListener {
             return messageBody.split(";");
         }
 
+    }
+
+    private static class MissingValueException extends Exception {
+        public MissingValueException(String fieldName) {
+            super("Missing value for " + fieldName);
+        }
     }
 }

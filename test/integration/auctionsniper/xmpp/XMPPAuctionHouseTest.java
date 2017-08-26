@@ -72,6 +72,11 @@ public class XMPPAuctionHouseTest {
             public void currentPrice(int price, int increment, PriceSource priceSource) {
                 // not implemented
             }
+
+            @Override
+            public void auctionFailed() {
+
+            }
         };
     }
 
