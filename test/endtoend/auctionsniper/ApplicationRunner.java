@@ -4,7 +4,6 @@ import auctionsniper.Main;
 import auctionsniper.SniperState;
 import auctionsniper.ui.MainWindow;
 
-import static auctionsniper.SniperState.JOINING;
 import static auctionsniper.ui.SnipersTableModel.textFor;
 import static endtoend.auctionsniper.FakeAuctionServer.XMPP_HOSTNAME;
 
@@ -19,15 +18,20 @@ public class ApplicationRunner {
     private AuctionSniperDriver driver;
 
     public void startBiddingIn(final FakeAuctionServer... auctions) {
-        startSniper(auctions);
+        startSniper();
         for (FakeAuctionServer auction : auctions) {
             final String itemId = auction.getItemId();
-            driver.startBiddingFor(itemId);
+            driver.startBiddingFor(itemId, Integer.MAX_VALUE);
             driver.showsSniperStatus(itemId, 0, 0, textFor(SniperState.JOINING));
         }
     }
 
-    private void startSniper(FakeAuctionServer[] auctions) {
+    public void startBiddingWithStopPrice(FakeAuctionServer auction, int price) {
+        startSniper();
+        driver.startBiddingFor(auction.getItemId(), price);
+    }
+
+    private void startSniper() {
         Thread thread = new Thread("Test Application") {
           @Override public void run() {
               try {
@@ -76,5 +80,9 @@ public class ApplicationRunner {
 
     public void showsSniperHasWonAuction(FakeAuctionServer auction, int lastPrice) {
         driver.showsSniperStatus(auction.getItemId(), lastPrice, lastPrice, textFor(SniperState.WON));
+    }
+
+    public void hasShownSniperIsLosing(FakeAuctionServer auction, int lastPrice, int lastBid) {
+        driver.showsSniperStatus(auction.getItemId(), lastPrice, lastBid, textFor(SniperState.LOSING));
     }
 }

@@ -6,6 +6,9 @@ import auctionsniper.util.Announcer;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.text.NumberFormat;
 
 
 /**
@@ -16,6 +19,7 @@ public class MainWindow extends JFrame {
     private static final String SNIPERS_TABLE_NAME = "Snipers Table";
     public static final String APPLICATION_TITLE = "Auction Sniper";
     public static final String NEW_ITEM_ID_NAME = "New Item Id Textfield";
+    public static final String NEW_ITEM_STOP_PRICE_NAME = "New Item Stop Price Id Textfield";
     public static final String JOIN_BUTTON_NAME = "Join Button";
 
     private SniperPortfolio portfolio;
@@ -32,24 +36,52 @@ public class MainWindow extends JFrame {
     }
 
     private JPanel makeControls() {
+        final JTextField itemIdField = itemIdField();
+        final JFormattedTextField stopPriceIdField = stopPriceField();
+
         JPanel controls = new JPanel(new FlowLayout());
-        final JTextField itemIdField = new JTextField();
-        itemIdField.setColumns(25);
-        itemIdField.setName(NEW_ITEM_ID_NAME);
+        controls.add(new JLabel("Item:"));
         controls.add(itemIdField);
+        controls.add(new JLabel("Stop price:"));
+        controls.add(stopPriceIdField);
 
         JButton joinAuctionButton = new JButton("Join Auction");
         joinAuctionButton.setName(JOIN_BUTTON_NAME);
         controls.add(joinAuctionButton);
 
-        joinAuctionButton.addActionListener(e -> {
-            // we’ve converted an ActionListener event, which is internal to the user interface framework, to a
-            // UserRequestListener event, which is about users interacting with an auction. These are two separate
-            // domains and MainWindow’s job is to translate from one to the other.
-            userRequests.announce().joinAuction(itemIdField.getText());
+        joinAuctionButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                // we’ve converted an ActionListener event, which is internal to the user interface framework, to a
+                // UserRequestListener event, which is about users interacting with an auction. These are two separate
+                // domains and MainWindow’s job is to translate from one to the other.
+                userRequests.announce().joinAuction(new UserRequestListener.Item(itemId(), stopPrice()));
+            }
+
+            private String itemId() {
+                return itemIdField.getText();
+            }
+
+            private int stopPrice() {
+                return ((Number)stopPriceIdField.getValue()).intValue();
+            }
         });
 
         return controls;
+    }
+
+
+    private JTextField itemIdField() {
+        JTextField itemIdField = new JTextField();
+        itemIdField.setColumns(10);
+        itemIdField.setName(NEW_ITEM_ID_NAME);
+        return itemIdField;
+    }
+
+    private JFormattedTextField stopPriceField() {
+        JFormattedTextField stopPriceField = new JFormattedTextField(NumberFormat.getIntegerInstance());
+        stopPriceField.setColumns(7);
+        stopPriceField.setName(NEW_ITEM_STOP_PRICE_NAME);
+        return stopPriceField;
     }
 
     private void fillContentPane(JTable snipersTable, JPanel controls) {

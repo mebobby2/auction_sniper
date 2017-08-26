@@ -23,8 +23,8 @@ public class AuctionSniperTest {
     private final Mockery context = new Mockery();
     private final Auction auction = context.mock(Auction.class);
     private final SniperListener sniperListener = context.mock(SniperListener.class);
-    private final AuctionSniper sniper = new AuctionSniper(ITEM_ID, auction);
     private static final String ITEM_ID = "item-xxx";
+    private final AuctionSniper sniper = new AuctionSniper(new UserRequestListener.Item(ITEM_ID, 2000), auction);
 
     //    This is a “logical” representation of what’s going on inside the object, in this case the Sniper. It allows the
 //    test to describe what it finds relevant about the Sniper, regardless of how the Sniper is actually implemented.
@@ -50,9 +50,7 @@ public class AuctionSniperTest {
     public void reportsLostIfAuctionClosesWhenBidding() {
         context.checking(new Expectations() {{
             ignoring(auction);
-            allowing(sniperListener).sniperStateChanged(
-                    with(aSniperThatIs(BIDDING)));
-                        then(sniperState.is("bidding"));
+            allowingSniperBidding();
 
             atLeast(1).of(sniperListener).sniperStateChanged(with(aSniperThatIs(LOST)));
             when(sniperState.is("bidding"));
@@ -116,6 +114,30 @@ public class AuctionSniperTest {
         sniper.currentPrice(123, 12, AuctionEventListener.PriceSource.FromOtherBidder);
         sniper.currentPrice(135, 45, AuctionEventListener.PriceSource.FromSniper);
     }
+
+    @Test
+    public void doesNotBidAndReportsLosingIfSubsequentPriceIsAboveStopPrice() {
+        allowingSniperBidding();
+        context.checking(new Expectations() {{
+            int bid = 123 + 45;
+            allowing(auction).bid(bid);
+            atLeast(1).of(sniperListener).sniperStateChanged(
+                    new SniperSnapshot(ITEM_ID, 2345, bid, LOSING));
+                                        when(sniperState.is("bidding"));
+        }});
+
+        sniper.currentPrice(123, 45, AuctionEventListener.PriceSource.FromOtherBidder);
+        sniper.currentPrice(2345, 25, AuctionEventListener.PriceSource.FromOtherBidder);
+    }
+
+    private void allowingSniperBidding() {
+        context.checking(new Expectations() {{
+            allowing(sniperListener).sniperStateChanged(
+                    with(aSniperThatIs(BIDDING)));
+                    then(sniperState.is("bidding"));
+        }});
+    }
+
     private Matcher<SniperSnapshot> aSniperThatIs(final SniperState state) {
         return new FeatureMatcher<SniperSnapshot, SniperState>(
                 equalTo(state), "sniper that is ", "was")
