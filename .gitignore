@@ -4,3 +4,4 @@ build
 AuctionSniper.iml
 .DS_Store
 auction-sniper.log
+auction-sniper.log.*
