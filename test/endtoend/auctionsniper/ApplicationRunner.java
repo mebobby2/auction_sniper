@@ -6,6 +6,7 @@ import auctionsniper.ui.MainWindow;
 
 import static auctionsniper.ui.SnipersTableModel.textFor;
 import static endtoend.auctionsniper.FakeAuctionServer.XMPP_HOSTNAME;
+import static org.hamcrest.CoreMatchers.containsString;
 
 /**
  * Created by bob on 16/07/2017.
@@ -16,6 +17,7 @@ public class ApplicationRunner {
     public static final String SNIPER_XMPP_ID = "sniper@192.168.0.151/Auction";
 
     private AuctionSniperDriver driver;
+    private AuctionLogDriver logDriver = new AuctionLogDriver();
 
     public void startBiddingIn(final FakeAuctionServer... auctions) {
         startSniper();
@@ -32,6 +34,7 @@ public class ApplicationRunner {
     }
 
     private void startSniper() {
+        logDriver.clearLog();
         Thread thread = new Thread("Test Application") {
           @Override public void run() {
               try {
@@ -86,8 +89,8 @@ public class ApplicationRunner {
         driver.showsSniperStatus(auction.getItemId(), lastPrice, lastBid, textFor(SniperState.LOSING));
     }
 
-    public void reportsInvalidMessage(FakeAuctionServer auction, String brokenMessage) {
-
+    public void reportsInvalidMessage(FakeAuctionServer auction, String message) throws Exception {
+        logDriver.hasEntry(containsString(message));
     }
 
     public void showsSniperHasFailed(FakeAuctionServer auction) {

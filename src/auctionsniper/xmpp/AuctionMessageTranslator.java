@@ -14,16 +14,20 @@ import java.util.Map;
 public class AuctionMessageTranslator implements MessageListener {
     private final AuctionEventListener listener;
     private final String sniperId;
+    private final XMPPFailureReporter failureReporter;
 
-    public AuctionMessageTranslator(String sniperId, AuctionEventListener listener) {
+    public AuctionMessageTranslator(String sniperId, AuctionEventListener listener, XMPPFailureReporter failureReporter) {
         this.listener = listener;
         this.sniperId = sniperId;
+        this.failureReporter = failureReporter;
     }
 
     public void processMessage(Chat chat, Message message) {
+        String messageBody = message.getBody();
         try {
-            translate(message.getBody());
-        } catch (Exception parseException) {
+            translate(messageBody);
+        } catch (Exception exception) {
+            failureReporter.cannotTranslateMessage(sniperId, messageBody, exception);
             listener.auctionFailed();
         }
     }
