@@ -3,7 +3,7 @@ package unit.auctionsniper.ui;
 import auctionsniper.AuctionSniper;
 import auctionsniper.SniperSnapshot;
 import auctionsniper.SniperState;
-import auctionsniper.UserRequestListener;
+import auctionsniper.UserRequestListener.Item;
 import auctionsniper.ui.Column;
 import auctionsniper.ui.SnipersTableModel;
 import auctionsniper.util.Defect;
@@ -30,7 +30,7 @@ public class SnipersTableModelTest {
     private final Mockery context = new Mockery();
     private TableModelListener listener = context.mock(TableModelListener.class);
     private final SnipersTableModel model = new SnipersTableModel();
-    private final AuctionSniper sniper = new AuctionSniper(new UserRequestListener.Item(ITEM_ID, 234), null);
+    private final AuctionSniper sniper = new AuctionSniper(new Item(ITEM_ID, 234), null);
 
     @Before
     public void attachModelListener() {
@@ -90,7 +90,7 @@ public class SnipersTableModelTest {
 
     @Test
     public void holdsSnipersInAdditionOrder() {
-        AuctionSniper sniper2 = new AuctionSniper(new UserRequestListener.Item("item234", 345), null);
+        AuctionSniper sniper2 = new AuctionSniper(new Item("item234", 345), null);
         context.checking(new Expectations() {{
             ignoring(listener);
         }});
@@ -104,7 +104,7 @@ public class SnipersTableModelTest {
 
     @Test
     public void updatesCorrectRowForSniper() {
-        AuctionSniper sniper2 = new AuctionSniper(new UserRequestListener.Item("item234", 345), null);
+        AuctionSniper sniper2 = new AuctionSniper(new Item("item234", 345), null);
         context.checking(new Expectations() {{
             allowing(listener).tableChanged(with(anyInsertionEvent()));
 

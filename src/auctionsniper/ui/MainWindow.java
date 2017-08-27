@@ -3,6 +3,7 @@ package auctionsniper.ui;
 import auctionsniper.SniperPortfolio;
 import auctionsniper.UserRequestListener;
 import auctionsniper.util.Announcer;
+import auctionsniper.UserRequestListener.Item;
 
 import javax.swing.*;
 import java.awt.*;
@@ -62,7 +63,7 @@ public class MainWindow extends JFrame {
                 // we’ve converted an ActionListener event, which is internal to the user interface framework, to a
                 // UserRequestListener event, which is about users interacting with an auction. These are two separate
                 // domains and MainWindow’s job is to translate from one to the other.
-                userRequests.announce().joinAuction(new UserRequestListener.Item(itemId(), stopPrice()));
+                userRequests.announce().joinAuction(new Item(itemId(), stopPrice()));
             }
 
             private String itemId() {

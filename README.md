@@ -209,5 +209,3 @@ SwingThreadSniperListener
 Announcer
 Defect
 AuctionMessageTranslator
-
-Upto: cleaning all imports of UserRequestListener.Item

@@ -3,7 +3,7 @@ package unit.auctionsniper;
 import auctionsniper.AuctionSniper;
 import auctionsniper.PortfolioListener;
 import auctionsniper.SniperPortfolio;
-import auctionsniper.UserRequestListener;
+import auctionsniper.UserRequestListener.Item;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.jmock.integration.junit4.JMock;
@@ -18,7 +18,7 @@ public class SniperPortfolioTest {
 
     @Test
     public void notifiesListenersOfNewSnipers() {
-        final AuctionSniper sniper = new AuctionSniper(new UserRequestListener.Item("item id", 123), null);
+        final AuctionSniper sniper = new AuctionSniper(new Item("item id", 123), null);
         context.checking(new Expectations() {{
             oneOf(listener).sniperAdded(sniper);
         }});

@@ -2,13 +2,12 @@ package auctionsniper.xmpp;
 
 import auctionsniper.Auction;
 import auctionsniper.AuctionHouse;
-import auctionsniper.UserRequestListener;
+import auctionsniper.UserRequestListener.Item;
 import org.apache.commons.io.FilenameUtils;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
 
 import java.util.logging.FileHandler;
-import java.util.logging.Handler;
 import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
@@ -42,7 +41,7 @@ public class XMPPAuctionHouse implements AuctionHouse {
     }
 
     @Override
-    public Auction auctionFor(UserRequestListener.Item item) {
+    public Auction auctionFor(Item item) {
         return new XMPPAuction(connection, item.identifier, failureReporter);
     }
 

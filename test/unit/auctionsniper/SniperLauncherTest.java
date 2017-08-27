@@ -7,6 +7,7 @@ import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.jmock.States;
 import org.junit.Test;
+import auctionsniper.UserRequestListener.Item;
 
 import static org.hamcrest.core.IsEqual.equalTo;
 
@@ -20,7 +21,7 @@ public class SniperLauncherTest {
 
     @Test
     public void addsNewSniperToCollectorAndThenJoinsAuction() {
-        final UserRequestListener.Item item = new UserRequestListener.Item("item 123", 456);
+        final Item item = new Item("item 123", 456);
 
         context.checking(new Expectations() {{
             allowing(auctionHouse).auctionFor(item); will(returnValue(auction));
@@ -37,7 +38,7 @@ public class SniperLauncherTest {
         launcher.joinAuction(item);
     }
 
-    protected Matcher<AuctionSniper>sniperForItem(UserRequestListener.Item item) {
+    protected Matcher<AuctionSniper>sniperForItem(Item item) {
         return new FeatureMatcher<AuctionSniper, String>(equalTo(item.identifier), "sniper with item id", "item") {
           @Override
           protected String featureValueOf(AuctionSniper actual) {

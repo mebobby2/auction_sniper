@@ -24,7 +24,7 @@ import static org.hamcrest.core.IsEqual.equalTo;
 @RunWith(JMock.class)
 public class AuctionSniperTest {
     protected static final String ITEM_ID = "item-xxx";
-    public static final Item ITEM = new UserRequestListener.Item(ITEM_ID, 1234);
+    public static final Item ITEM = new Item(ITEM_ID, 1234);
 
     private final Mockery context = new Mockery();
     private final Auction auction = context.mock(Auction.class);
