@@ -28,15 +28,16 @@ public enum Column {
         }
     };
 
+    abstract public Object valueIn(SniperSnapshot snapshot);
+
     public final String name;
 
     Column(String name) {
         this.name = name;
     }
 
-    public static auctionsniper.ui.Column at(int offset) {
+    public static Column at(int offset) {
         return values()[offset];
     }
 
-    abstract public Object valueIn(SniperSnapshot snapshot);
 }

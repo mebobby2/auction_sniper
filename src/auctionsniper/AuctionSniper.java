@@ -1,6 +1,6 @@
 package auctionsniper;
 
-import auctionsniper.ui.SnipersTableModel;
+import auctionsniper.UserRequestListener.Item;
 import auctionsniper.util.Announcer;
 
 /**
@@ -9,7 +9,7 @@ import auctionsniper.util.Announcer;
 public class AuctionSniper implements AuctionEventListener {
     private final Announcer<SniperListener> listeners = Announcer.to(SniperListener.class);
     private final Auction auction;
-    private final UserRequestListener.Item item;
+    private final Item item;
     private SniperSnapshot snapshot;
 
     public AuctionSniper(UserRequestListener.Item item, Auction auction) {

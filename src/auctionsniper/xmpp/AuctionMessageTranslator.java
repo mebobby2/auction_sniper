@@ -1,5 +1,8 @@
 package auctionsniper.xmpp;
 
+import static auctionsniper.AuctionEventListener.PriceSource.FromOtherBidder;
+import static auctionsniper.AuctionEventListener.PriceSource.FromSniper;
+
 import auctionsniper.AuctionEventListener;
 import org.jivesoftware.smack.Chat;
 import org.jivesoftware.smack.MessageListener;
@@ -68,7 +71,7 @@ public class AuctionMessageTranslator implements MessageListener {
         }
 
         public AuctionEventListener.PriceSource isFrom(String sniperId) throws MissingValueException {
-            return sniperId.equals(bidder()) ? AuctionEventListener.PriceSource.FromSniper : AuctionEventListener.PriceSource.FromOtherBidder;
+            return sniperId.equals(bidder()) ? FromSniper : FromOtherBidder;
         }
 
         private String bidder() throws MissingValueException {

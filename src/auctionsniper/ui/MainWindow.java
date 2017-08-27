@@ -15,24 +15,33 @@ import java.text.NumberFormat;
  * Created by bob on 22/07/2017.
  */
 public class MainWindow extends JFrame {
-    public static final String MAIN_WINDOW_NAME = "Auction Sniper Main";
-    private static final String SNIPERS_TABLE_NAME = "Snipers Table";
     public static final String APPLICATION_TITLE = "Auction Sniper";
-    public static final String NEW_ITEM_ID_NAME = "New Item Id Textfield";
-    public static final String NEW_ITEM_STOP_PRICE_NAME = "New Item Stop Price Id Textfield";
-    public static final String JOIN_BUTTON_NAME = "Join Button";
+    private static final String SNIPERS_TABLE_NAME = "Snipers Table";
+    public static final String MAIN_WINDOW_NAME = "Auction Sniper Main";
+    public static final String NEW_ITEM_ID_NAME = "item id";
+    public static final String JOIN_BUTTON_NAME = "join button";
+    public static final String NEW_ITEM_STOP_PRICE_NAME = "stop price";
 
-    private SniperPortfolio portfolio;
     private final Announcer<UserRequestListener> userRequests = Announcer.to(UserRequestListener.class);
 
     public MainWindow(SniperPortfolio portfolio) {
         super("Auction Sniper");
-        this.portfolio = portfolio;
         setName(MAIN_WINDOW_NAME);
         fillContentPane(makeSnipersTable(portfolio), makeControls());
         pack();
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setVisible(true);
+    }
+
+    public void addUserRequestListener(UserRequestListener listener) {
+        userRequests.addListener(listener);
+    }
+
+    private void fillContentPane(JTable snipersTable, JPanel controls) {
+        final Container contentPane = getContentPane();
+        contentPane.setLayout(new BorderLayout());
+        contentPane.add(controls, BorderLayout.NORTH);
+        contentPane.add(new JScrollPane(snipersTable), BorderLayout.CENTER);
     }
 
     private JPanel makeControls() {
@@ -47,7 +56,6 @@ public class MainWindow extends JFrame {
 
         JButton joinAuctionButton = new JButton("Join Auction");
         joinAuctionButton.setName(JOIN_BUTTON_NAME);
-        controls.add(joinAuctionButton);
 
         joinAuctionButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent e) {
@@ -65,6 +73,7 @@ public class MainWindow extends JFrame {
                 return ((Number)stopPriceIdField.getValue()).intValue();
             }
         });
+        controls.add(joinAuctionButton);
 
         return controls;
     }
@@ -84,22 +93,11 @@ public class MainWindow extends JFrame {
         return stopPriceField;
     }
 
-    private void fillContentPane(JTable snipersTable, JPanel controls) {
-        final Container contentPane = getContentPane();
-        contentPane.setLayout(new BorderLayout());
-        contentPane.add(controls, BorderLayout.NORTH);
-        contentPane.add(new JScrollPane(snipersTable), BorderLayout.CENTER);
-    }
-
     private JTable makeSnipersTable(SniperPortfolio portfolio) {
         SnipersTableModel model = new SnipersTableModel();
         portfolio.addPortfolioListener(model);
         final JTable snipersTable = new JTable(model);
         snipersTable.setName(SNIPERS_TABLE_NAME);
         return snipersTable;
-    }
-
-    public void addUserRequestListener(UserRequestListener listener) {
-        userRequests.addListener(listener);
     }
 }

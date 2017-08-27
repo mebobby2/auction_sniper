@@ -10,7 +10,7 @@ public interface UserRequestListener extends EventListener {
 
     // There is a static nested class. In java, static classes have to be nested.
     // Static classes do not need an instance of the enclosing class in order to be instantiated itself
-    public static class Item {
+    class Item {
         public final String identifier;
         public final int stopPrice;
 

@@ -201,3 +201,13 @@ Before that: make sure code is inline with github code, and then test it manuall
 
 Done:
 The tests
+
+Column
+MainWindow
+SnipersTableModel
+SwingThreadSniperListener
+Announcer
+Defect
+AuctionMessageTranslator
+
+Upto: cleaning all imports of UserRequestListener.Item
