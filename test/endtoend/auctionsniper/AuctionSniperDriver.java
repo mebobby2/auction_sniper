@@ -26,6 +26,12 @@ public class AuctionSniperDriver extends JFrameDriver {
                         new AWTEventQueueProber(timeoutMillis, 100));
     }
 
+    public void hasColumnTitles() {
+        JTableHeaderDriver headers = new JTableHeaderDriver(this, JTableHeader.class);
+        headers.hasHeaders(matching(withLabelText("Item"), withLabelText("Last Price"),
+                withLabelText("Last Bid"), withLabelText("State")));
+    }
+
     public void showsSniperStatus(String itemId, int lastPrice, int lastBid, String statusText) {
         JTableDriver table = new JTableDriver(this);
         table.hasRow(
@@ -34,26 +40,20 @@ public class AuctionSniperDriver extends JFrameDriver {
         );
     }
 
-    public void hasColumnTitles() {
-        JTableHeaderDriver headers = new JTableHeaderDriver(this, JTableHeader.class);
-        headers.hasHeaders(matching(withLabelText("Item"), withLabelText("Last Price"),
-                withLabelText("Last Bid"), withLabelText("State")));
-    }
-
-    public void startBiddingFor(String itemId, int stopPrice) {
+    public void startBiddingWithStopPrice(String itemId, int stopPrice) {
         textField(NEW_ITEM_ID_NAME).replaceAllText(itemId);
         textField(NEW_ITEM_STOP_PRICE_NAME).replaceAllText(String.valueOf(stopPrice));
         bidButton().click();
-    }
-
-    private JButtonDriver bidButton() {
-        return new JButtonDriver(this, JButton.class, named(MainWindow.JOIN_BUTTON_NAME));
-
     }
 
     private JTextFieldDriver textField(String name) {
         JTextFieldDriver newItemId = new JTextFieldDriver(this, JTextField.class, named(name));
         newItemId.focusWithMouse();
         return newItemId;
+    }
+
+    private JButtonDriver bidButton() {
+        return new JButtonDriver(this, JButton.class, named(MainWindow.JOIN_BUTTON_NAME));
+
     }
 }

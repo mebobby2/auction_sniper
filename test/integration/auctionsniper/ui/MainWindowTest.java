@@ -20,7 +20,7 @@ public class MainWindowTest {
 
         mainWindow.addUserRequestListener(item -> itemProbe.setReceivedValue(item));
 
-        driver.startBiddingFor("an item-id", 789);
+        driver.startBiddingWithStopPrice("an item-id", 789);
         driver.check(itemProbe);
     }
 }

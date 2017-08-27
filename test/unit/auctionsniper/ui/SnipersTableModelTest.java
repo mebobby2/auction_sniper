@@ -26,11 +26,11 @@ import static org.junit.Assert.assertThat;
 
 @RunWith(JMock.class)
 public class SnipersTableModelTest {
+    private static final String ITEM_ID = "item 0";
     private final Mockery context = new Mockery();
     private TableModelListener listener = context.mock(TableModelListener.class);
     private final SnipersTableModel model = new SnipersTableModel();
-    private final UserRequestListener.Item item = new UserRequestListener.Item("item123", Integer.MAX_VALUE);
-    private final AuctionSniper sniper = new AuctionSniper(item, null);
+    private final AuctionSniper sniper = new AuctionSniper(new UserRequestListener.Item(ITEM_ID, 234), null);
 
     @Before
     public void attachModelListener() {
@@ -50,11 +50,21 @@ public class SnipersTableModelTest {
     }
 
     @Test
+    public void acceptsNewSniper() {
+        context.checking(new Expectations() {{
+            one(listener).tableChanged(with(anInsertionAtRow(0)));
+        }});
+
+        model.sniperAdded(sniper);
+        assertRowMatchesSnapshot(0, SniperSnapshot.joining(ITEM_ID));
+    }
+
+    @Test
     public void setsSniperValuesInColumns() {
         SniperSnapshot bidding = sniper.getSnapshot().bidding(555,666);
         context.checking(new Expectations(){{
             allowing(listener).tableChanged(with(anyInsertionEvent()));
-            
+
             one(listener).tableChanged(with(aChangeInRow(0)));
         }});
 
@@ -75,13 +85,12 @@ public class SnipersTableModelTest {
         model.sniperAdded(sniper);
 
         assertEquals(1, model.getRowCount());
-        assertRowMatchesSnapshot(0, SniperSnapshot.joining("item123"));
+        assertRowMatchesSnapshot(0, SniperSnapshot.joining(ITEM_ID));
     }
 
     @Test
     public void holdsSnipersInAdditionOrder() {
-        UserRequestListener.Item item2 = new UserRequestListener.Item("item234", Integer.MAX_VALUE);
-        AuctionSniper sniper2 = new AuctionSniper(item2, null);
+        AuctionSniper sniper2 = new AuctionSniper(new UserRequestListener.Item("item234", 345), null);
         context.checking(new Expectations() {{
             ignoring(listener);
         }});
@@ -89,26 +98,27 @@ public class SnipersTableModelTest {
         model.sniperAdded(sniper);
         model.sniperAdded(sniper2);
 
-        assertEquals("item123", cellValue(0, Column.ITEM_IDENTIFIER));
+        assertEquals(ITEM_ID, cellValue(0, Column.ITEM_IDENTIFIER));
         assertEquals("item234", cellValue(1, Column.ITEM_IDENTIFIER));
     }
 
     @Test
     public void updatesCorrectRowForSniper() {
+        AuctionSniper sniper2 = new AuctionSniper(new UserRequestListener.Item("item234", 345), null);
         context.checking(new Expectations() {{
-            ignoring(listener);
+            allowing(listener).tableChanged(with(anyInsertionEvent()));
+
+            one(listener).tableChanged(with(aChangeInRow(1)));
         }});
 
-        UserRequestListener.Item item2 = new UserRequestListener.Item("item234", Integer.MAX_VALUE);
-        AuctionSniper sniper2 = new AuctionSniper(item2, null);
 
         model.sniperAdded(sniper);
         model.sniperAdded(sniper2);
 
-        SniperSnapshot winning2 = sniper2.getSnapshot().winning(100);
-        model.sniperStateChanged(winning2);
+        SniperSnapshot winning1 = sniper2.getSnapshot().winning(123);
+        model.sniperStateChanged(winning1);
 
-        assertRowMatchesSnapshot(1, winning2);
+        assertRowMatchesSnapshot(1, winning1);
     }
 
     @Test(expected = Defect.class)

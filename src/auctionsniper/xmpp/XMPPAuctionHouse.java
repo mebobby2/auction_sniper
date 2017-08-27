@@ -13,12 +13,13 @@ import java.util.logging.Logger;
 import java.util.logging.SimpleFormatter;
 
 public class XMPPAuctionHouse implements AuctionHouse {
+    private static final String LOGGER_NAME = "auction-sniper";
+    public static final String LOG_FILE_NAME = "auction-sniper.log";
     public static final String ITEM_ID_AS_LOGIN = "auction-%s";
     public static final String AUCTION_RESOURCE = "Auction";
-    private static final String LOGGER_NAME = "auction-sniper";
-    private static final String LOG_FILE_NAME = "auction-sniper.log";
-    private final XMPPConnection connection;
-    private final XMPPFailureReporter failureReporter;
+
+    public final XMPPConnection connection;
+    public final XMPPFailureReporter failureReporter;
 
     public XMPPAuctionHouse(XMPPConnection connection) throws XMPPAuctionException {
         this.connection = connection;

@@ -1,7 +1,7 @@
 package unit.auctionsniper.xmpp;
 
-import auctionsniper.xmpp.AuctionMessageTranslator;
 import auctionsniper.AuctionEventListener;
+import auctionsniper.xmpp.AuctionMessageTranslator;
 import auctionsniper.xmpp.XMPPFailureReporter;
 import org.jivesoftware.smack.Chat;
 import org.jivesoftware.smack.packet.Message;
@@ -11,25 +11,23 @@ import org.jmock.integration.junit4.JMock;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import static endtoend.auctionsniper.ApplicationRunner.SNIPER_ID;
-
 /**
  * Created by bob on 23/07/2017.
  */
 @RunWith(JMock.class)
 public class AuctionMessageTranslatorTest {
-    public static final Chat UNUSED_CHAT = null;
+    private static final String SNIPER_ID = "sniper id";
+    private static final Chat UNUSED_CHAT = null;
 
     private final Mockery context = new Mockery();
-
-    private final AuctionEventListener listener = context.mock(AuctionEventListener.class);
     private final XMPPFailureReporter failureReporter = context.mock(XMPPFailureReporter.class);
+    private final AuctionEventListener listener = context.mock(AuctionEventListener.class);
     private final AuctionMessageTranslator translator = new AuctionMessageTranslator(SNIPER_ID, listener, failureReporter);
 
     @Test
     public void notifiesAuctionClosedWhenCloseMessageReceived() {
         context.checking(new Expectations() {{
-            oneOf(listener).auctionClosed();
+            exactly(1).of(listener).auctionClosed();
         }});
 
         Message message = new Message();
@@ -51,7 +49,7 @@ public class AuctionMessageTranslatorTest {
     }
 
     @Test
-    public void notifiesBidDetailsWhenCurrentPriceMessageReceveivedFromSniper() {
+    public void notifiesBidDetailsWhenCurrentPriceMessageReceivedFromSniper() {
         context.checking(new Expectations(){{
             exactly(1).of(listener).currentPrice(234, 5, AuctionEventListener.PriceSource.FromSniper);
         }});
@@ -64,6 +62,15 @@ public class AuctionMessageTranslatorTest {
     public void notifiesAuctionFailedWhenBadMessageReceived() {
         String badMessage = "a bad message";
         expectFailureWithMessage(badMessage);
+
+        translator.processMessage(UNUSED_CHAT, message(badMessage));
+    }
+
+    @Test
+    public void notifiesAuctionFailedWhenEventTypeMissing() {
+        String badMessage = "SQLVersion: 1.1; CurrentPrice: 234; Increment: 5; Bidder: " + SNIPER_ID + ";";
+        expectFailureWithMessage(badMessage);
+
         translator.processMessage(UNUSED_CHAT, message(badMessage));
     }
 
@@ -71,13 +78,6 @@ public class AuctionMessageTranslatorTest {
         Message message = new Message();
         message.setBody(body);
         return message;
-    }
-
-    @Test
-    public void notifiesAuctionFailedWhenEventTypeMissing() {
-        String badMessage = "SQLVersion: 1.1; CurrentPrice: 234; Increment: 5; Bidder: " + SNIPER_ID + ";";
-        expectFailureWithMessage(badMessage);
-        translator.processMessage(UNUSED_CHAT, message(badMessage));
     }
 
     private void expectFailureWithMessage(final String badMessage) {

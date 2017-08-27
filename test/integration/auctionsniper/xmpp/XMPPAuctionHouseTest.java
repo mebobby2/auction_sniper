@@ -2,14 +2,11 @@ package integration.auctionsniper.xmpp;
 
 import auctionsniper.Auction;
 import auctionsniper.AuctionEventListener;
-import auctionsniper.Main;
 import auctionsniper.UserRequestListener;
-import auctionsniper.xmpp.XMPPAuction;
 import auctionsniper.xmpp.XMPPAuctionException;
 import auctionsniper.xmpp.XMPPAuctionHouse;
 import endtoend.auctionsniper.ApplicationRunner;
 import endtoend.auctionsniper.FakeAuctionServer;
-import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
 import org.junit.After;
 import org.junit.Before;
@@ -17,7 +14,6 @@ import org.junit.Test;
 
 import java.util.concurrent.CountDownLatch;
 
-import static auctionsniper.xmpp.XMPPAuctionHouse.AUCTION_RESOURCE;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.hamcrest.MatcherAssert.assertThat;
 
@@ -69,14 +65,10 @@ public class XMPPAuctionHouseTest {
             }
 
             @Override
-            public void currentPrice(int price, int increment, PriceSource priceSource) {
-                // not implemented
-            }
+            public void currentPrice(int price, int increment, PriceSource priceSource) { }
 
             @Override
-            public void auctionFailed() {
-
-            }
+            public void auctionFailed() { }
         };
     }
 

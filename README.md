@@ -197,6 +197,7 @@ Page 252
 
 Part IV
 
-Before that: make sure code is inline with github code
+Before that: make sure code is inline with github code, and then test it manually by starting up the app
 
-
+Done:
+The tests

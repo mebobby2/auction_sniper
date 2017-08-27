@@ -20,8 +20,8 @@ public class SniperLauncherTest {
 
     @Test
     public void addsNewSniperToCollectorAndThenJoinsAuction() {
-        final String itemId = "item 123";
-        final UserRequestListener.Item item = new UserRequestListener.Item(itemId, 789);
+        final UserRequestListener.Item item = new UserRequestListener.Item("item 123", 456);
+
         context.checking(new Expectations() {{
             allowing(auctionHouse).auctionFor(item); will(returnValue(auction));
 

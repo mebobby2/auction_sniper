@@ -7,10 +7,10 @@ import java.io.File;
 import java.io.IOException;
 import java.util.logging.LogManager;
 
+import static auctionsniper.xmpp.XMPPAuctionHouse.LOG_FILE_NAME;
 import static org.junit.Assert.assertThat;
 
 public class AuctionLogDriver {
-    public static final String LOG_FILE_NAME = "auction-sniper.log";
     private final File logFile = new File(LOG_FILE_NAME);
 
     public void hasEntry(Matcher<String> matcher) throws IOException {
