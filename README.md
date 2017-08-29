@@ -197,23 +197,4 @@ Page 252
 
 Part IV
 
-Before that: make sure code is inline with github code, and then test it manually by starting up the app
-
-Done:
-The tests
-src/auctionsniper/ui
-src/auctionsniper/util
-src/auctionsniper/xmpp
-
-Auction
-AuctionEventListener
-AuctionHouse
-AuctionSniper
-Main
-SniperCollector
-SniperLauncher
-SniperListener
-SniperPortfolio
-SniperSnapshot
-SniperState
-UserRequestListener
+Before that: test it manually by starting up the app
