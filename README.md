@@ -193,8 +193,7 @@ The skill is in learning how to divide requirements up into incremental slices, 
 
 
 ## Upto
-Page 252
+Page 260
 
-Part IV
+But That’s Crazy Talk...
 
-Before that: test it manually by starting up the app
