@@ -15,19 +15,13 @@ import java.util.ArrayList;
 import static auctionsniper.xmpp.XMPPAuctionHouse.AUCTION_RESOURCE;
 
 public class Main {
-    @SuppressWarnings("unused")
-    private ArrayList<Auction> notToBeGCd = new ArrayList<>();
-
-    private MainWindow ui;
-
     private static final int ARG_HOSTNAME = 0;
     private static final int ARG_USERNAME = 1;
     private static final int ARG_PASSWORD = 2;
 
-    public static final String BID_COMMAND_FORMAT = "SQLVersion 1.1; Command: BID; Price: %d;";
-    public static final String JOIN_COMMAND_FORMAT = "";
-
     private final SniperPortfolio portfolio = new SniperPortfolio();
+
+    private MainWindow ui;
 
     public Main() throws Exception {
         startUserInterface();
@@ -41,8 +35,8 @@ public class Main {
         main.addUserRequestListenerFor(auctionHouse);
     }
 
-    private void addUserRequestListenerFor(final AuctionHouse auctionHouse) {
-        ui.addUserRequestListener(new SniperLauncher(auctionHouse, portfolio));
+    private void startUserInterface() throws Exception {
+        SwingUtilities.invokeAndWait(() -> ui = new MainWindow(portfolio));
     }
 
     private void disconnectWhenUICloses(final XMPPAuctionHouse auctionHouse) {
@@ -54,16 +48,8 @@ public class Main {
         });
     }
 
-    private static XMPPConnection connection(String hostname, String username, String password) throws XMPPException {
-        XMPPConnection connection = new XMPPConnection((hostname));
-        connection.connect();
-        connection.login(username, password, AUCTION_RESOURCE);
-
-        return connection;
-    }
-
-    private void startUserInterface() throws Exception {
-        SwingUtilities.invokeAndWait(() -> ui = new MainWindow(portfolio));
+    private void addUserRequestListenerFor(final AuctionHouse auctionHouse) {
+        ui.addUserRequestListener(new SniperLauncher(auctionHouse, portfolio));
     }
 
 }

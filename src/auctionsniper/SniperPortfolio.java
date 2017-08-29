@@ -3,10 +3,15 @@ package auctionsniper;
 import auctionsniper.util.Announcer;
 
 import java.util.ArrayList;
+import java.util.EventListener;
 
 public class SniperPortfolio implements SniperCollector {
-    private final ArrayList<AuctionSniper> snipers = new ArrayList<>();
+    public interface PortfolioListener extends EventListener {
+        void sniperAdded(AuctionSniper sniper);
+    }
+
     private final Announcer<PortfolioListener> announcer = Announcer.to(PortfolioListener.class);
+    private final ArrayList<AuctionSniper> snipers = new ArrayList<>();
 
     @Override
     public void addSniper(AuctionSniper sniper) {

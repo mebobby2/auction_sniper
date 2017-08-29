@@ -13,6 +13,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 import auctionsniper.UserRequestListener.Item;
+import auctionsniper.AuctionEventListener.PriceSource;
 import static auctionsniper.SniperState.*;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.beans.SamePropertyValuesAs.samePropertyValuesAs;
@@ -76,7 +77,7 @@ public class AuctionSniperTest {
             }
         });
 
-        sniper.currentPrice(price, increment, AuctionEventListener.PriceSource.FromOtherBidder);
+        sniper.currentPrice(price, increment, PriceSource.FromOtherBidder);
     }
 
     @Test
@@ -88,7 +89,7 @@ public class AuctionSniperTest {
             atLeast(1).of(sniperListener).sniperStateChanged(new SniperSnapshot(ITEM_ID, price, 0, LOSING));
         }});
 
-        sniper.currentPrice(price, increment, AuctionEventListener.PriceSource.FromOtherBidder);
+        sniper.currentPrice(price, increment, PriceSource.FromOtherBidder);
     }
 
     @Test
@@ -103,8 +104,8 @@ public class AuctionSniperTest {
             when(sniperState.is("bidding"));
         }});
 
-        sniper.currentPrice(123, 45, AuctionEventListener.PriceSource.FromOtherBidder);
-        sniper.currentPrice(2345, 25, AuctionEventListener.PriceSource.FromOtherBidder);
+        sniper.currentPrice(123, 45, PriceSource.FromOtherBidder);
+        sniper.currentPrice(2345, 25, PriceSource.FromOtherBidder);
     }
 
     @Test
@@ -122,9 +123,9 @@ public class AuctionSniperTest {
             when(sniperState.is("winning"));
         }});
 
-        sniper.currentPrice(123, 45, AuctionEventListener.PriceSource.FromOtherBidder);
-        sniper.currentPrice(168, 45, AuctionEventListener.PriceSource.FromSniper);
-        sniper.currentPrice(price, increment, AuctionEventListener.PriceSource.FromOtherBidder);
+        sniper.currentPrice(123, 45, PriceSource.FromOtherBidder);
+        sniper.currentPrice(168, 45, PriceSource.FromSniper);
+        sniper.currentPrice(price, increment, PriceSource.FromOtherBidder);
     }
 
     @Test
@@ -140,8 +141,8 @@ public class AuctionSniperTest {
                 inSequence(states);
         }});
 
-        sniper.currentPrice(price1, 25, AuctionEventListener.PriceSource.FromOtherBidder);
-        sniper.currentPrice(price2, 25, AuctionEventListener.PriceSource.FromOtherBidder);
+        sniper.currentPrice(price1, 25, PriceSource.FromOtherBidder);
+        sniper.currentPrice(price2, 25, PriceSource.FromOtherBidder);
     }
 
     @Test
@@ -154,7 +155,7 @@ public class AuctionSniperTest {
                 when(sniperState.is("bidding"));
         }});
 
-        sniper.currentPrice(123, 45, AuctionEventListener.PriceSource.FromOtherBidder);
+        sniper.currentPrice(123, 45, PriceSource.FromOtherBidder);
         sniper.auctionClosed();
     }
 
@@ -166,7 +167,7 @@ public class AuctionSniperTest {
                 when(sniperState.is("losing"));
         }});
 
-        sniper.currentPrice(1230, 456, AuctionEventListener.PriceSource.FromOtherBidder);
+        sniper.currentPrice(1230, 456, PriceSource.FromOtherBidder);
         sniper.auctionClosed();
     }
 
@@ -180,8 +181,8 @@ public class AuctionSniperTest {
                 when(sniperState.is("bidding"));
         }});
 
-        sniper.currentPrice(123, 12, AuctionEventListener.PriceSource.FromOtherBidder);
-        sniper.currentPrice(135, 45, AuctionEventListener.PriceSource.FromSniper);
+        sniper.currentPrice(123, 12, PriceSource.FromOtherBidder);
+        sniper.currentPrice(135, 45, PriceSource.FromSniper);
     }
 
     @Test
@@ -195,8 +196,8 @@ public class AuctionSniperTest {
                 when(sniperState.is("winning"));
         }});
 
-        sniper.currentPrice(123, 12, AuctionEventListener.PriceSource.FromOtherBidder);
-        sniper.currentPrice(135, 45, AuctionEventListener.PriceSource.FromSniper);
+        sniper.currentPrice(123, 12, PriceSource.FromOtherBidder);
+        sniper.currentPrice(135, 45, PriceSource.FromSniper);
         sniper.auctionClosed();
     }
 
@@ -207,7 +208,7 @@ public class AuctionSniperTest {
 
         expectSniperToFailWhenItIs("bidding");
 
-        sniper.currentPrice(123, 45, AuctionEventListener.PriceSource.FromOtherBidder);
+        sniper.currentPrice(123, 45, PriceSource.FromOtherBidder);
         sniper.auctionFailed();
     }
 
@@ -226,7 +227,7 @@ public class AuctionSniperTest {
 
         expectSniperToFailWhenItIs("losing");
 
-        sniper.currentPrice(1230, 456, AuctionEventListener.PriceSource.FromOtherBidder);
+        sniper.currentPrice(1230, 456, PriceSource.FromOtherBidder);
         sniper.auctionFailed();
     }
 
@@ -238,8 +239,8 @@ public class AuctionSniperTest {
 
         expectSniperToFailWhenItIs("winning");
 
-        sniper.currentPrice(123, 12, AuctionEventListener.PriceSource.FromOtherBidder);
-        sniper.currentPrice(135, 45, AuctionEventListener.PriceSource.FromSniper);
+        sniper.currentPrice(123, 12, PriceSource.FromOtherBidder);
+        sniper.currentPrice(135, 45, PriceSource.FromSniper);
         sniper.auctionFailed();
     }
 

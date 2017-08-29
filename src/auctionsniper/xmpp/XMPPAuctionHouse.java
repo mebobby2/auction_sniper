@@ -15,14 +15,24 @@ public class XMPPAuctionHouse implements AuctionHouse {
     private static final String LOGGER_NAME = "auction-sniper";
     public static final String LOG_FILE_NAME = "auction-sniper.log";
     public static final String ITEM_ID_AS_LOGIN = "auction-%s";
+    public static final String AUCTION_ID_FORMAT = ITEM_ID_AS_LOGIN + "@%s/" + XMPPAuctionHouse.AUCTION_RESOURCE;
     public static final String AUCTION_RESOURCE = "Auction";
 
-    public final XMPPConnection connection;
-    public final XMPPFailureReporter failureReporter;
+    private final XMPPConnection connection;
+    private final XMPPFailureReporter failureReporter;
 
     public XMPPAuctionHouse(XMPPConnection connection) throws XMPPAuctionException {
         this.connection = connection;
         this.failureReporter = new LoggingXMPPFailureReporter(makeLogger());
+    }
+
+    @Override
+    public Auction auctionFor(Item item) {
+        return new XMPPAuction(connection, auctionId(item.identifier, connection), failureReporter);
+    }
+
+    public void disconnect() {
+        connection.disconnect();
     }
 
     public static XMPPAuctionHouse connect(String hostname, String username, String password) throws XMPPAuctionException {
@@ -36,13 +46,8 @@ public class XMPPAuctionHouse implements AuctionHouse {
         }
     }
 
-    public void disconnect() {
-        connection.disconnect();
-    }
-
-    @Override
-    public Auction auctionFor(Item item) {
-        return new XMPPAuction(connection, item.identifier, failureReporter);
+    private String auctionId(String itemId, XMPPConnection connection) {
+        return String.format(AUCTION_ID_FORMAT, itemId, connection.getServiceName());
     }
 
     private Logger makeLogger() throws XMPPAuctionException {

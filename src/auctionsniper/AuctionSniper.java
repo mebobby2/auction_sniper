@@ -9,17 +9,27 @@ import auctionsniper.util.Announcer;
 public class AuctionSniper implements AuctionEventListener {
     private final Announcer<SniperListener> listeners = Announcer.to(SniperListener.class);
     private final Auction auction;
-    private final Item item;
     private SniperSnapshot snapshot;
+    private final Item item;
 
     public AuctionSniper(Item item, Auction auction) {
-        this.snapshot = SniperSnapshot.joining(item.identifier);
-        this.auction = auction;
         this.item = item;
+        this.auction = auction;
+        this.snapshot = SniperSnapshot.joining(item.identifier);
+    }
+
+    public void addSniperListener(SniperListener listener) {
+        listeners.addListener(listener);
     }
 
     public void auctionClosed() {
         snapshot = snapshot.closed();
+        notifyChange();
+    }
+
+    @Override
+    public void auctionFailed() {
+        snapshot = snapshot.failed();
         notifyChange();
     }
 
@@ -42,21 +52,11 @@ public class AuctionSniper implements AuctionEventListener {
         notifyChange();
     }
 
-    @Override
-    public void auctionFailed() {
-        snapshot = snapshot.failed();
-        listeners.announce().sniperStateChanged(snapshot);
-    }
-
-    private void notifyChange() {
-        listeners.announce().sniperStateChanged(snapshot);
-    }
-
     public SniperSnapshot getSnapshot() {
         return snapshot;
     }
 
-    public void addSniperListener(SniperListener listener) {
-        listeners.addListener(listener);
+    private void notifyChange() {
+        listeners.announce().sniperStateChanged(snapshot);
     }
 }

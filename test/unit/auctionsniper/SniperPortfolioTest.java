@@ -1,7 +1,7 @@
 package unit.auctionsniper;
 
 import auctionsniper.AuctionSniper;
-import auctionsniper.PortfolioListener;
+import auctionsniper.SniperPortfolio.PortfolioListener;
 import auctionsniper.SniperPortfolio;
 import auctionsniper.UserRequestListener.Item;
 import org.jmock.Expectations;

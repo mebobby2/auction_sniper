@@ -201,11 +201,19 @@ Before that: make sure code is inline with github code, and then test it manuall
 
 Done:
 The tests
+src/auctionsniper/ui
+src/auctionsniper/util
+src/auctionsniper/xmpp
 
-Column
-MainWindow
-SnipersTableModel
-SwingThreadSniperListener
-Announcer
-Defect
-AuctionMessageTranslator
+Auction
+AuctionEventListener
+AuctionHouse
+AuctionSniper
+Main
+SniperCollector
+SniperLauncher
+SniperListener
+SniperPortfolio
+SniperSnapshot
+SniperState
+UserRequestListener

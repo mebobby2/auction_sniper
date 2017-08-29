@@ -2,6 +2,7 @@ package unit.auctionsniper.xmpp;
 
 import auctionsniper.AuctionEventListener;
 import auctionsniper.xmpp.AuctionMessageTranslator;
+import auctionsniper.AuctionEventListener.PriceSource;
 import auctionsniper.xmpp.XMPPFailureReporter;
 import org.jivesoftware.smack.Chat;
 import org.jivesoftware.smack.packet.Message;
@@ -39,7 +40,7 @@ public class AuctionMessageTranslatorTest {
     @Test
     public void notifiesBidDetailsWhenCurrentPriceMessageReceivedFromOtherBidder() {
         context.checking(new Expectations(){{
-            exactly(1).of(listener).currentPrice(192, 7, AuctionEventListener.PriceSource.FromOtherBidder);
+            exactly(1).of(listener).currentPrice(192, 7, PriceSource.FromOtherBidder);
         }});
 
         Message message = new Message();
@@ -51,7 +52,7 @@ public class AuctionMessageTranslatorTest {
     @Test
     public void notifiesBidDetailsWhenCurrentPriceMessageReceivedFromSniper() {
         context.checking(new Expectations(){{
-            exactly(1).of(listener).currentPrice(234, 5, AuctionEventListener.PriceSource.FromSniper);
+            exactly(1).of(listener).currentPrice(234, 5, PriceSource.FromSniper);
         }});
         Message message = new Message();
         message.setBody("SQLVersion: 1.1; Event: PRICE; CurrentPrice: 234; Increment: 5; Bidder: " + SNIPER_ID + ";");
