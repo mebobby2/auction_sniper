@@ -191,9 +191,40 @@ As the code scales up, the only way we can continue to understand and maintain i
 We hope that by now you’re getting a sense of the rhythm of incrementally growing software, adding functionality in thin but coherent slices. For each new feature, write some tests that show what it should do, work through each of those tests changing just enough code to make it pass, restructure the code as needed either to open up space for new functionality or to reveal new concepts—then ship it. We discuss how this fits into the larger development picture in Chapter 5. In static languages, such as Java and C#, we can often use the compiler to help us navigate the chain of implementation dependencies: change the code to accept the new triggering event, see what breaks, fix that breakage, see what that change breaks in turn, and repeat the process until the functionality works.
 The skill is in learning how to divide requirements up into incremental slices, always having something working, always adding just one more feature. The process should feel relentless—it just keeps moving. To make this work, we have to understand how to change the code incrementally and, critically, keep the code well structured so that we can take it wherever we need to go (and we don’t know where that is yet). This is why the refactoring part of a test-driven development cycle is so critical—we always get into trouble when we don’t keep up that side of the bargain.
 
+### Listening to Tests
+* Our intention in test-driven development is to use mock objects to bring out relation- ships between objects
+* Do not override a class’ internal features—this just locks down your test to the quirks of the current implementation. Only override visible methods. This rule also prohibits exposing internal methods just to override them in a test. If you can’t get to the structure you need, then the tests are telling you that it’s time to break up the class into smaller, composable features.
+* When extracting implicit components, we start by looking for two conditions: arguments that are always used together in the class, and those that have the same lifetime. Once we’ve found a coincidence, we have the harder task of finding a good name that explains the concept
+* When a constructor is too large, and we don’t believe there’s an implicit new type amongst the arguments, we can use more default values and only overwrite them for particular test cases
+
+#### What the Tests Will Tell Us
+* Some of the test smells we’ve identified, such as needing “magic” to create mocks, are to do with knowledge leaking between components. If we can keep knowledge local to an object (either internal or passed in), then its im- plementation is independent of its context; we can safely move it wherever we like. Do this consistently and your application, built out of pluggable components, will be easy to change.
+* One reason why we don’t like mocking concrete classes is that we like to have names for the relationships between objects as well the objects them- selves. As the legends say, if we have something’s true name, we can control it. If we can see it, we have a better chance of finding its other uses and so reducing duplication.
+* We find that when we emphasize how objects communicate, rather than what they are, we end up with types and roles defined more in terms of the domain than of the implementation. This might be because we have a greater number of smaller abstractions, which gets us further away from the under- lying language. Somehow we seem to get more domain vocabulary into the code.
+* We find that by applying “Tell, Don’t Ask” consistently, we end up with a coding style where we tend to pass behavior (in the form of callbacks) into the system instead of pulling values up through the stack. For example, in Chapter 17, we introduced a SniperCollector that responds when told about a new Sniper. Passing this listener into the Sniper creation code gives us better information hiding than if we’d exposed a collection to be added to. More precise interfaces give us better information-hiding and clearer abstractions.
+
+### How Many Assertions in a Test Method?
+Some TDD practitioners suggest that each test should only contain one expectation or assertion. This is useful as a training rule when learning TDD, to avoid asserting everything the developer can think of, but we don’t find it practical. A better rule is to think of one coherent feature per test, which might be represented by up to a handful of assertions. If a single test seems to be making assertions about different features of a target object, it might be worth splitting up. Once again, expressiveness is the key: as a reader of this test, can I figure out what’s significant?
+
+### Diagnostics Are a First-Class Feature
+Like everyone else, we find it easy to get carried away with the simple three-step TDD cycle: fail, pass, refactor. We’re making good progress and we know what the failures mean because we’ve just written the test. But nowadays, we try to follow the four-step TDD cycle (fail, report, pass, refactor). 
+1. Write a failing test
+2. Make the diagnostics clear (make sure the test says clearly what has fired so u don't need to hunt for it in the code)
+3. Make the test pass
+4. Refactor
+
+### Test Flexibility
+Common causes of test brittleness include:
+1. The tests are too tightly coupled to unrelated parts of the system or unrelated behavior of the object(s) they’re testing;
+2. The tests overspecify the expected behavior of the target code, constraining it more than necessary; and,
+3. There is duplication when multiple tests exercise the same production code behavior.
+
+#### Test for Information, Not Representation
+Tests should be written in terms of the information passed between objects,
+not of how that information is represented. Doing so will both make the tests more self-explanatory and shield them from changes in implementation controlled elsewhere in the system. Significant values, like NO_CUSTOMER_FOUND, should be defined in one place as a constant. 
 
 ## Upto
-Page 260
+Page 312
 
-But That’s Crazy Talk...
+Part V
 
