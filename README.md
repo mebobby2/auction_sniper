@@ -221,10 +221,13 @@ Common causes of test brittleness include:
 
 #### Test for Information, Not Representation
 Tests should be written in terms of the information passed between objects,
-not of how that information is represented. Doing so will both make the tests more self-explanatory and shield them from changes in implementation controlled elsewhere in the system. Significant values, like NO_CUSTOMER_FOUND, should be defined in one place as a constant. 
+not of how that information is represented. Doing so will both make the tests more self-explanatory and shield them from changes in implementation controlled elsewhere in the system. Significant values, like NO_CUSTOMER_FOUND, should be defined in one place as a constant.
+
+### Levels of Testing
+Let us organize our tests into a chain of phases: unit tests that run very quickly in memory; slower integration tests that reach outside the process, usually through third-party APIs, and that depend on the configuration of external services such as databases and messaging brokers; and, finally, end-to-end tests that run against a system packaged and deployed into a production-like environment. This gives us rapid feedback if we break the application’s core logic, and incre- mental feedback about integration at increasingly coarse levels of granularity. 
 
 ## Upto
-Page 312
+Page 326
 
-Part V
+Chapter 26
 
