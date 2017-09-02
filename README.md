@@ -229,8 +229,4 @@ Let us organize our tests into a chain of phases: unit tests that run very quick
 ### Concurrency
 Concurrency is a system-wide concern that should be controlled outside the objects that need to run concurrent tasks. By passing an appropriate Executor to the constructor, we’re following the “context independence” design principle. 
 
-## Upto
-Page 336
-
-Stress-Testing Passive Objects
 
